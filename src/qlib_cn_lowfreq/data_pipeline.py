@@ -299,6 +299,15 @@ def _coerce_recorder(recorder):
     raise RuntimeError("Recorder does not expose logging APIs; please upgrade qlib.")
 
 
+def _log_params(recorder, **params):
+    """Log parameters whether the recorder expects kwargs or a single mapping."""
+
+    try:
+        recorder.log_params(**params)
+    except TypeError:
+        recorder.log_params(params)
+
+
 def main(argv: Optional[Iterable[str]] = None) -> None:
     args = parse_args(argv)
     ensure_directories()
@@ -318,7 +327,8 @@ def main(argv: Optional[Iterable[str]] = None) -> None:
     mlruns_uri = (AKSHARE_DATA_DIR / "mlruns").resolve()
     with _start_recorder(R, str(mlruns_uri)) as raw_recorder:
         recorder = _coerce_recorder(raw_recorder)
-        recorder.log_params(
+        _log_params(
+            recorder,
             start=args.start,
             end=args.end,
             symbols=args.symbols,
