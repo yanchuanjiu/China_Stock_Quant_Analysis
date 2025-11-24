@@ -1,0 +1,14 @@
+artifact_uri: /Users/air/QT_China/experiments/107921307723149453/53729191e59a46fd82cd9b2627116526/artifacts
+end_time: 1763994486736
+entry_point_name: ''
+experiment_id: '107921307723149453'
+lifecycle_stage: active
+run_id: 53729191e59a46fd82cd9b2627116526
+run_name: lightgbm_test
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1763994486463
+status: 3
+tags: []
+user_id: air
