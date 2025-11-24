@@ -1,0 +1,6 @@
+akshare>=1.11.89
+pyqlib>=0.9.0
+lightgbm>=3.3.5
+pandas>=1.5.0
+numpy>=1.23.0
+scipy>=1.10.0
