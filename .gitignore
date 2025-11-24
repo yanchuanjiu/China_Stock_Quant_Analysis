@@ -33,15 +33,7 @@ ENV/
 *.swo
 *~
 
-# Qlib data and experiments
-data/
-experiments/
-.qlib/
-
-# Qlib source (vendored, not part of this repo)
-qlib/
-
-# Process logs
+# Process logs (optional，若需共享可移除)
 process.md
 
 # OS
@@ -55,4 +47,5 @@ mlruns/
 *.tmp
 *.log
 *.bak
+.coverage
 
