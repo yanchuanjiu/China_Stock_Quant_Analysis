@@ -18,18 +18,17 @@ def require_dependencies():
     try:
         qlib = importlib.import_module("qlib")
         contrib_data = importlib.import_module("qlib.contrib.data.handler")
-        contrib_eval = importlib.import_module("qlib.contrib.eval")
+        contrib_eval = importlib.import_module("qlib.contrib.evaluate")
         contrib_model = importlib.import_module("qlib.contrib.model.gbdt")
         contrib_strategy = importlib.import_module("qlib.contrib.strategy.signal_strategy")
         dataset_mod = importlib.import_module("qlib.data.dataset")
         dataset_handler_mod = importlib.import_module("qlib.data.dataset.handler")
         utils_mod = importlib.import_module("qlib.utils")
         workflow_mod = importlib.import_module("qlib.workflow")
-        workflow_task_mod = importlib.import_module("qlib.workflow.task")
         workflow_records_mod = importlib.import_module("qlib.workflow.record_temp")
     except ImportError as exc:  # pragma: no cover
         raise RuntimeError(
-            "缺少 pyqlib 依赖，无法运行训练与回测。请参考 README 通过离线 wheel 安装依赖。"
+            f"缺少 pyqlib 依赖，无法运行训练与回测。错误详情: {exc}"
         ) from exc
 
     return {
@@ -42,7 +41,6 @@ def require_dependencies():
         "DataHandlerLP": dataset_handler_mod.DataHandlerLP,
         "init_instance_by_config": utils_mod.init_instance_by_config,
         "R": workflow_mod.R,
-        "Task": workflow_task_mod.Task,
         "SignalRecord": workflow_records_mod.SignalRecord,
         "SigAnaRecord": workflow_records_mod.SigAnaRecord,
         "PortAnaRecord": workflow_records_mod.PortAnaRecord,
@@ -85,6 +83,24 @@ def build_dataset(deps, market: str, start: str, end: str, freq: str):
     return dataset
 
 
+def _coerce_recorder(recorder):
+    """Normalize recorder object to one exposing log_* APIs."""
+    if hasattr(recorder, "log_params"):
+        return recorder
+    active = getattr(recorder, "active_recorder", None)
+    if active is not None and hasattr(active, "log_params"):
+        return active
+    raise RuntimeError("Recorder does not expose logging APIs; please upgrade qlib.")
+
+
+def _log_params(recorder, **params):
+    """Log parameters whether the recorder expects kwargs or a single mapping."""
+    try:
+        recorder.log_params(**params)
+    except TypeError:
+        recorder.log_params(params)
+
+
 def run_experiment(args: WorkflowArgs) -> None:
     """Run the full Qlib experiment pipeline for low-frequency trading."""
 
@@ -97,8 +113,6 @@ def run_experiment(args: WorkflowArgs) -> None:
 
     LGBModel = deps["LGBModel"]
     TopkDropoutStrategy = deps["TopkDropoutStrategy"]
-    Task = deps["Task"]
-    risk_analysis = deps["risk_analysis"]
     R = deps["R"]
     SignalRecord = deps["SignalRecord"]
     SigAnaRecord = deps["SigAnaRecord"]
@@ -113,15 +127,12 @@ def run_experiment(args: WorkflowArgs) -> None:
         n_estimators=200,
     )
 
-    with R.start(exp_name="lowfreq_ths", recorder_name="model_train", uri=str(EXP_ROOT.resolve())) as recorder:
-        recorder.log_params(vars(args))
+    with R.start(experiment_name="lowfreq_ths", recorder_name="model_train", uri=str(EXP_ROOT.resolve())) as raw_recorder:
+        recorder = _coerce_recorder(raw_recorder)
+        _log_params(recorder, **vars(args))
         model.fit(dataset)
         pred = model.predict(dataset)
         recorder.log_metrics({"n_predictions": len(pred)})
-
-        label = dataset.prepare("test", col_set="label")
-        analysis_df = risk_analysis(pred=pred, label=label)
-        recorder.log_df("risk_analysis", analysis_df)
 
         backtest_end = datetime.fromisoformat(args.end).date()
         lookback_start = backtest_end - timedelta(days=30 * args.lookback_months)

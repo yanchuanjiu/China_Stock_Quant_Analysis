@@ -7,6 +7,7 @@ import importlib.util
 import shutil
 import subprocess
 import sys
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, List, Optional, TYPE_CHECKING
@@ -170,7 +171,22 @@ class TongHuaShunFetcher:
         """Fetch and concatenate all instruments."""
 
         pd = self.pd
-        frames = [self.fetch_symbol(symbol) for symbol in self.list_instruments()]
+        frames = []
+        for symbol in self.list_instruments():
+            time.sleep(0.2)
+            try:
+                df = self.fetch_symbol(symbol)
+                frames.append(df)
+            except ValueError as e:
+                print(f"Warning: Skipping {symbol} due to error: {e}")
+                continue
+            except Exception as e:
+                print(f"Warning: Skipping {symbol} due to unexpected error: {e}")
+                continue
+        
+        if not frames:
+            raise ValueError("No data fetched for any symbol!")
+
         return pd.concat(frames).sort_index()
 
 

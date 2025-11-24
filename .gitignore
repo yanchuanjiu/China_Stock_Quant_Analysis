@@ -42,6 +42,7 @@ Thumbs.db
 
 # MLflow
 mlruns/
+experiments/
 
 # Temporary files
 *.tmp
