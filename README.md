@@ -57,7 +57,18 @@
    PYTHONPATH=src python -m qlib_cn_lowfreq.data_pipeline --start 2015-01-01 --end 2024-12-31 --symbols 000001.SZ 600000.SH --mirror-yahoo
    ```
 
-   该命令将从 akshare 拉取日线数据（前复权），并转换为 Qlib 所需的**日频**二进制格式存放到 `./data/akshare_ths/qlib_data`；使用 `--mirror-yahoo` 选项会将生成数据复制到 `~/.qlib/qlib_data/cn_data`，方便与官方 Yahoo! 财经数据合并使用。
+    该命令将从 akshare 拉取日线数据（前复权），并转换为 Qlib 所需的**日频**二进制格式存放到 `./data/akshare_ths/qlib_data`；使用 `--mirror-yahoo` 选项会将生成数据复制到 `~/.qlib/qlib_data/cn_data`，方便与官方 Yahoo! 财经数据合并使用。
+
+### 实际数据可用性验证（BYD）
+
+若需验证 akshare 模块和 Qlib 自带的 Yahoo! Finance 数据加载能力，可以运行带网络访问的集成测试。测试会使用比亚迪（002594.SZ）的真实行情数据，而非模拟数据：
+
+```bash
+# 需要具备网络访问权限，启用 LIVE_DATA_TESTS=1 触发真实数据验证
+PYTHONPATH=src LIVE_DATA_TESTS=1 pytest -k "live_sources" -vv
+```
+
+第一条用例会通过 akshare 拉取比亚迪 A 股行情，验证数据格式和字段；第二条用例会借助 Qlib 自带的远程数据下载工具获取 Yahoo! Finance 的日线示例数据，并通过 `qlib.data.D` 读取比亚迪行情，确保 Qlib 的数据加载链路可用。
 
 2. 运行示例训练与回测：
 

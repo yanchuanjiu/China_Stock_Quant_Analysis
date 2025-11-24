@@ -4,7 +4,9 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest import mock
 
-import pandas as pd
+import pytest
+
+pd = pytest.importorskip("pandas")
 
 from qlib_cn_lowfreq import data_pipeline
 
