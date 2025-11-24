@@ -42,6 +42,33 @@ class DummyTask:
         self.recorder = recorder
 
 
+class DummySignalRecord:
+    def __init__(self, model, dataset, recorder):
+        self.model = model
+        self.dataset = dataset
+        self.recorder = recorder
+
+    def generate(self):
+        self.recorder.sink["signal_generated"] = True
+
+
+class DummySigAnaRecord:
+    def __init__(self, recorder):
+        self.recorder = recorder
+
+    def generate(self):
+        self.recorder.sink["sig_analysis"] = True
+
+
+class DummyPortAnaRecord:
+    def __init__(self, recorder, *_, **__):
+        self.recorder = recorder
+        self.all_freq: list[str] = []
+
+    def generate(self):
+        self.recorder.sink["port_analysis"] = True
+
+
 class DummyRecorder:
     def __init__(self, sink):
         self.sink = sink
@@ -54,6 +81,9 @@ class DummyRecorder:
 
     def log_df(self, name, df):
         self.sink[name] = df
+
+    def load_object(self, key):
+        return self.sink.get(key)
 
 
 class DummyR:
@@ -85,6 +115,9 @@ def build_stub_dependencies(sink):
         "init_instance_by_config": mock.Mock(return_value="handler"),
         "R": DummyR(sink),
         "Task": DummyTask,
+        "SignalRecord": DummySignalRecord,
+        "SigAnaRecord": DummySigAnaRecord,
+        "PortAnaRecord": DummyPortAnaRecord,
     }
 
 
@@ -101,6 +134,9 @@ class WorkflowTests(unittest.TestCase):
             "qlib.utils": SimpleNamespace(init_instance_by_config="init"),
             "qlib.workflow": SimpleNamespace(R="Recorder"),
             "qlib.workflow.task": SimpleNamespace(Task="Task"),
+            "qlib.workflow.record_temp": SimpleNamespace(
+                SignalRecord="SignalRecord", SigAnaRecord="SigAna", PortAnaRecord="PortAna"
+            ),
         }
 
         def fake_import(name):
@@ -120,6 +156,9 @@ class WorkflowTests(unittest.TestCase):
             "init_instance_by_config",
             "R",
             "Task",
+            "SignalRecord",
+            "SigAnaRecord",
+            "PortAnaRecord",
         ]:
             self.assertIn(key, deps)
 
@@ -148,6 +187,12 @@ class WorkflowTests(unittest.TestCase):
                 "5",
                 "--n-drop",
                 "2",
+                "--benchmark",
+                "CSI100",
+                "--lookback-months",
+                "6",
+                "--account",
+                "5000000",
             ]
         )
         self.assertEqual(parsed.market, "test_market")
@@ -157,6 +202,9 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(parsed.horizon, 10)
         self.assertEqual(parsed.topk, 5)
         self.assertEqual(parsed.n_drop, 2)
+        self.assertEqual(parsed.benchmark, "CSI100")
+        self.assertEqual(parsed.lookback_months, 6)
+        self.assertEqual(parsed.account, 5000000)
 
     def test_run_experiment_with_stubs(self):
         sink = {}
@@ -182,6 +230,9 @@ class WorkflowTests(unittest.TestCase):
         self.assertIn("params", sink)
         self.assertIn("metrics", sink)
         self.assertIn("risk_analysis", sink)
+        self.assertTrue(sink.get("signal_generated"))
+        self.assertTrue(sink.get("sig_analysis"))
+        self.assertTrue(sink.get("port_analysis"))
 
 
 if __name__ == "__main__":
