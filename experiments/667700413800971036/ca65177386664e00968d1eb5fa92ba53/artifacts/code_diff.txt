@@ -1,0 +1,12 @@
+diff --git a/.gitignore b/.gitignore
+index 5b02444..de06843 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -42,7 +42,6 @@ Thumbs.db
+ 
+ # MLflow
+ mlruns/
+-experiments/
+ 
+ # Temporary files
+ *.tmp
