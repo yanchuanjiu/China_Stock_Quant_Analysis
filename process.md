@@ -200,3 +200,64 @@ python run_paper_trading.py --start 2024-10-01 --end 2025-05-14
 # 先更新数据再运行
 python run_paper_trading.py --update
 ```
+
+---
+
+## 2025-11-25 版本发布 v0.0.6
+
+### Git 提交信息
+
+**分支**: `codex/0.0.6`  
+**提交**: `d2c7ba4`  
+**远程仓库**: https://github.com/yanchuanjiu/China_Stock_Quant_Analysis.git
+
+### 主要更新内容
+
+1. ✅ **新增模拟实盘交易脚本** (`run_paper_trading.py`)
+   - 完整的实盘模拟功能
+   - 支持 LightGBM 和 XGBoost 模型
+   - 自动数据更新支持
+
+2. ✅ **新增可视化脚本** (`visualize_results.py`)
+   - 累计收益曲线
+   - 风险分析图表
+   - 模型对比雷达图和柱状图
+   - 详细交易记录和持仓详情
+
+3. ✅ **修复数据范围问题**
+   - 回测周期修正为 2024-10-08 ~ 2025-05-14
+   - 修复收益曲线在5月14日后停止的问题
+
+4. ✅ **更新配置文件**
+   - 新增工作流配置文件 (`configs/`)
+   - 更新 `.gitignore` 排除数据目录
+
+5. ✅ **更新文档**
+   - 完善 `process.md` 记录
+   - 更新实验报告和对比数据
+
+### 统计信息
+
+- **文件变更**: 179 个文件
+- **新增代码**: 21,684 行
+- **删除代码**: 346 行
+- **新增文件**: 
+  - `run_paper_trading.py`
+  - `visualize_results.py`
+  - `configs/workflow_config_*.yaml`
+  - `output/visualizations/*.html`
+  - `output/paper_trading/*`
+
+### 查看代码
+
+```bash
+# 克隆仓库
+git clone https://github.com/yanchuanjiu/China_Stock_Quant_Analysis.git
+cd China_Stock_Quant_Analysis
+
+# 切换到 v0.0.6 分支
+git checkout codex/0.0.6
+
+# 查看提交历史
+git log --oneline -10
+```
