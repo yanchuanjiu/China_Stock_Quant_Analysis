@@ -1,0 +1,967 @@
+diff --git a/.gitignore b/.gitignore
+index 5b02444..de06843 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -42,7 +42,6 @@ Thumbs.db
+ 
+ # MLflow
+ mlruns/
+-experiments/
+ 
+ # Temporary files
+ *.tmp
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/code_cached.txt b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/code_cached.txt
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/code_diff.txt b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/code_diff.txt
+deleted file mode 100644
+index f77d78c..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/code_diff.txt
++++ /dev/null
+@@ -1,12 +0,0 @@
+-diff --git a/.gitignore b/.gitignore
+-index 5b02444..de06843 100644
+---- a/.gitignore
+-+++ b/.gitignore
+-@@ -42,7 +42,6 @@ Thumbs.db
+- 
+- # MLflow
+- mlruns/
+--experiments/
+- 
+- # Temporary files
+- *.tmp
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/code_status.txt b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/code_status.txt
+deleted file mode 100644
+index 8369107..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/code_status.txt
++++ /dev/null
+@@ -1,26 +0,0 @@
+-On branch codex/0.0.5
+-Your branch is up to date with 'origin/codex/0.0.5'.
+-
+-Changes not staged for commit:
+-  (use "git add <file>..." to update what will be committed)
+-  (use "git restore <file>..." to discard changes in working directory)
+-	modified:   .gitignore
+-
+-Untracked files:
+-  (use "git add <file>..." to include in what will be committed)
+-	Users/
+-	configs/
+-	data/normalized/
+-	data/qlib_data/
+-	data/source/
+-	experiments/409347409439738809/
+-	experiments/667700413800971036/
+-	experiments_full/
+-	qlib/qlib/_version.py
+-	qlib/scripts/data_collector/baostock_1d/
+-	qlib_bin.tar.gz
+-	run_qlib_full_workflow.py
+-	run_rd_agent_workflow.py
+-	run_rdagent_workflow.py
+-
+-no changes added to commit (use "git add" and/or "git commit -a")
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/label.pkl b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/label.pkl
+deleted file mode 100644
+index e774613..0000000
+Binary files a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/label.pkl and /dev/null differ
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/lightgbm_model.pkl b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/lightgbm_model.pkl
+deleted file mode 100644
+index 7d4e598..0000000
+Binary files a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/lightgbm_model.pkl and /dev/null differ
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/indicator_analysis_1day.pkl b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/indicator_analysis_1day.pkl
+deleted file mode 100644
+index 4820b71..0000000
+Binary files a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/indicator_analysis_1day.pkl and /dev/null differ
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/indicators_normal_1day.pkl b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/indicators_normal_1day.pkl
+deleted file mode 100644
+index 9e07132..0000000
+Binary files a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/indicators_normal_1day.pkl and /dev/null differ
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/indicators_normal_1day_obj.pkl b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/indicators_normal_1day_obj.pkl
+deleted file mode 100644
+index 787ce49..0000000
+Binary files a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/indicators_normal_1day_obj.pkl and /dev/null differ
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/port_analysis_1day.pkl b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/port_analysis_1day.pkl
+deleted file mode 100644
+index ce9a4b0..0000000
+Binary files a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/port_analysis_1day.pkl and /dev/null differ
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/positions_normal_1day.pkl b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/positions_normal_1day.pkl
+deleted file mode 100644
+index c73f207..0000000
+Binary files a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/positions_normal_1day.pkl and /dev/null differ
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/report_normal_1day.pkl b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/report_normal_1day.pkl
+deleted file mode 100644
+index 8acc88d..0000000
+Binary files a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/report_normal_1day.pkl and /dev/null differ
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/pred.pkl b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/pred.pkl
+deleted file mode 100644
+index 6b477f0..0000000
+Binary files a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/pred.pkl and /dev/null differ
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/sig_analysis/ic.pkl b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/sig_analysis/ic.pkl
+deleted file mode 100644
+index a039c3b..0000000
+Binary files a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/sig_analysis/ic.pkl and /dev/null differ
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/sig_analysis/ric.pkl b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/sig_analysis/ric.pkl
+deleted file mode 100644
+index b8d9859..0000000
+Binary files a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/sig_analysis/ric.pkl and /dev/null differ
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/meta.yaml b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/meta.yaml
+deleted file mode 100644
+index e455cbd..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/meta.yaml
++++ /dev/null
+@@ -1,14 +0,0 @@
+-artifact_uri: file:///Users/air/QT_China/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts
+-end_time: 1764046677951
+-entry_point_name: ''
+-experiment_id: '409347409439738809'
+-lifecycle_stage: active
+-run_id: fe0af79c531f4fa1892a8fd4c6686daa
+-run_name: mlflow_recorder
+-source_name: ''
+-source_type: 4
+-source_version: ''
+-start_time: 1764046670312
+-status: 3
+-tags: []
+-user_id: air
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.annualized_return b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.annualized_return
+deleted file mode 100644
+index 11f3df5..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.annualized_return
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046677943 0.07067800379577271 0
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.information_ratio b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.information_ratio
+deleted file mode 100644
+index 61174f2..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.information_ratio
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046677943 0.5741995060356639 0
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.max_drawdown b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.max_drawdown
+deleted file mode 100644
+index 73536a1..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.max_drawdown
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046677943 -0.10130549910915478 0
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.mean b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.mean
+deleted file mode 100644
+index e1f9eaf..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.mean
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046677914 0.0002969664025032467 0
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.std b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.std
+deleted file mode 100644
+index 150455c..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.std
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046677940 0.007978715542609394 0
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.annualized_return b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.annualized_return
+deleted file mode 100644
+index 34c6783..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.annualized_return
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046677899 0.09439852882743184 0
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.information_ratio b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.information_ratio
+deleted file mode 100644
+index 6074519..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.information_ratio
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046677910 0.7656364082725285 0
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.max_drawdown b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.max_drawdown
+deleted file mode 100644
+index 7122bbd..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.max_drawdown
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046677910 -0.09714457458756039 0
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.mean b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.mean
+deleted file mode 100644
+index f0fad3c..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.mean
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046677786 0.0003966324740648397 0
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.std b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.std
+deleted file mode 100644
+index f68e8e4..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.std
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046677791 0.007991975985291342 0
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.ffr b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.ffr
+deleted file mode 100644
+index 1e82a83..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.ffr
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046677944 1.0 0
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.pa b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.pa
+deleted file mode 100644
+index cd1a38e..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.pa
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046677944 0.0 0
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.pos b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.pos
+deleted file mode 100644
+index cd1a38e..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.pos
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046677944 0.0 0
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/IC b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/IC
+deleted file mode 100644
+index a3c3274..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/IC
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046671059 0.03512535568137238 0
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/ICIR b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/ICIR
+deleted file mode 100644
+index c261ac1..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/ICIR
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046671059 0.2135433910399796 0
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/Rank IC b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/Rank IC
+deleted file mode 100644
+index 0099958..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/Rank IC	
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046671060 0.015339202268016093 0
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/Rank ICIR b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/Rank ICIR
+deleted file mode 100644
+index b9a0fcf..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/Rank ICIR	
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046671060 0.07654868426607966 0
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/l2.train b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/l2.train
+deleted file mode 100644
+index c792f39..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/l2.train
++++ /dev/null
+@@ -1,72 +0,0 @@
+-1764046670966 0.995489947730652 0
+-1764046670967 0.9949309089764147 1
+-1764046670967 0.9944646494600916 2
+-1764046670968 0.993895644486073 3
+-1764046670969 0.9933360181758781 4
+-1764046670969 0.9928193824842294 5
+-1764046670969 0.9923267861424917 6
+-1764046670969 0.9918404520312238 7
+-1764046670969 0.9913718172298974 8
+-1764046670970 0.9909080390505283 9
+-1764046670970 0.990475260841785 10
+-1764046670970 0.9900807331573617 11
+-1764046670970 0.9896723049015244 12
+-1764046670971 0.9892413953643671 13
+-1764046670971 0.9888963829146098 14
+-1764046670971 0.988453802280975 15
+-1764046670971 0.9879976005739504 16
+-1764046670971 0.9876034036008268 17
+-1764046670972 0.9872374040571787 18
+-1764046670972 0.9868734217838003 19
+-1764046670973 0.9864643307425651 20
+-1764046670973 0.9860866943131399 21
+-1764046670974 0.9857504099670757 22
+-1764046670974 0.9854349293028914 23
+-1764046670974 0.985146715445908 24
+-1764046670974 0.9848100811379187 25
+-1764046670975 0.984470469248216 26
+-1764046670975 0.9842093744364627 27
+-1764046670975 0.9839175017318487 28
+-1764046670975 0.9836472075407934 29
+-1764046670975 0.9833574206828232 30
+-1764046670976 0.9830886277830954 31
+-1764046670976 0.98284958812132 32
+-1764046670976 0.9825529149945967 33
+-1764046670976 0.9822459795271586 34
+-1764046670977 0.9820201295186564 35
+-1764046670977 0.9817787904268022 36
+-1764046670978 0.9815722658023155 37
+-1764046670978 0.9812347859138041 38
+-1764046670978 0.9809747158142654 39
+-1764046670978 0.9807367186205148 40
+-1764046670978 0.9804948042161937 41
+-1764046670979 0.9802298941191573 42
+-1764046670979 0.9799770041470526 43
+-1764046670979 0.979766876976882 44
+-1764046670979 0.9795114116999714 45
+-1764046670979 0.9793062512852659 46
+-1764046670980 0.9790661396252892 47
+-1764046670980 0.9788246137512788 48
+-1764046670980 0.9786439578835905 49
+-1764046670980 0.9784721625793827 50
+-1764046670980 0.9781867488571985 51
+-1764046670980 0.9779574114781497 52
+-1764046670981 0.977735350011033 53
+-1764046670981 0.9774617450388378 54
+-1764046670981 0.9771988135531745 55
+-1764046670981 0.9769161816040656 56
+-1764046670981 0.9767002941516321 57
+-1764046670982 0.9765032960535315 58
+-1764046670982 0.9763044786396237 59
+-1764046670982 0.9760822753497104 60
+-1764046670982 0.9758968016332255 61
+-1764046670983 0.9757091185888869 62
+-1764046670983 0.9755113764106891 63
+-1764046670983 0.9753525000127359 64
+-1764046670983 0.9751444599545883 65
+-1764046670984 0.974945675474583 66
+-1764046670984 0.9747515510404445 67
+-1764046670984 0.9745268212147803 68
+-1764046670984 0.974333665121261 69
+-1764046670985 0.9740826496669939 70
+-1764046670985 0.9738779724976453 71
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/l2.valid b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/l2.valid
+deleted file mode 100644
+index 7899d8d..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/l2.valid
++++ /dev/null
+@@ -1,72 +0,0 @@
+-1764046670986 0.9960699427710173 0
+-1764046670987 0.9959868997933736 1
+-1764046670988 0.9959209391116933 2
+-1764046670988 0.995791920310586 3
+-1764046670988 0.9956788157531158 4
+-1764046670988 0.9955904278846193 5
+-1764046670989 0.995573368705408 6
+-1764046670989 0.9954713575798111 7
+-1764046670990 0.9953917176458358 8
+-1764046670990 0.9953245502127313 9
+-1764046670993 0.9951958994416104 10
+-1764046670993 0.9951623124370123 11
+-1764046670994 0.9952392974803281 12
+-1764046670995 0.9952450957096756 13
+-1764046670995 0.9952444356722387 14
+-1764046670995 0.9951194898391836 15
+-1764046670996 0.9950806128275589 16
+-1764046670996 0.99512796444817 17
+-1764046670997 0.995116028710736 18
+-1764046670997 0.995032440278966 19
+-1764046670998 0.9950423663261941 20
+-1764046670998 0.9949275992176452 21
+-1764046670999 0.9949502451761048 22
+-1764046670999 0.9949730033776198 23
+-1764046670999 0.994995336212237 24
+-1764046671000 0.9949452744894055 25
+-1764046671002 0.9949572951674671 26
+-1764046671002 0.9950245925363373 27
+-1764046671002 0.9950425890482542 28
+-1764046671003 0.995030764798592 29
+-1764046671004 0.9950780103564484 30
+-1764046671004 0.9951035301028617 31
+-1764046671004 0.9951192151410246 32
+-1764046671005 0.9951251331525233 33
+-1764046671005 0.9950511146792872 34
+-1764046671005 0.9951187665065895 35
+-1764046671006 0.9951593130770161 36
+-1764046671006 0.9951280371181183 37
+-1764046671007 0.9950557017228409 38
+-1764046671007 0.9950294836145306 39
+-1764046671008 0.9950974163991713 40
+-1764046671008 0.9951203100518042 41
+-1764046671009 0.9950507143826498 42
+-1764046671009 0.9950946769038377 43
+-1764046671009 0.9951328395229078 44
+-1764046671010 0.9950730641220058 45
+-1764046671011 0.9950471621880844 46
+-1764046671011 0.9950855215153396 47
+-1764046671012 0.9950603717495603 48
+-1764046671012 0.9950605173373188 49
+-1764046671013 0.995030103029472 50
+-1764046671013 0.9949775879574565 51
+-1764046671013 0.9950272915115105 52
+-1764046671014 0.9949958275449282 53
+-1764046671014 0.9950546974580897 54
+-1764046671015 0.9950343850775455 55
+-1764046671015 0.9950869590980385 56
+-1764046671016 0.9950574931811494 57
+-1764046671016 0.9950754229041281 58
+-1764046671016 0.9951178966942255 59
+-1764046671017 0.9951261991869861 60
+-1764046671017 0.9950543702067349 61
+-1764046671017 0.9950490077650831 62
+-1764046671019 0.9950687898946149 63
+-1764046671020 0.9950575095835422 64
+-1764046671020 0.9950336692069451 65
+-1764046671021 0.9950843072800953 66
+-1764046671021 0.9951243124828408 67
+-1764046671021 0.9951624637505825 68
+-1764046671023 0.9951537735264122 69
+-1764046671027 0.9951321964979337 70
+-1764046671030 0.9951319101323077 71
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/class b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/class
+deleted file mode 100644
+index 5db8ba9..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/class
++++ /dev/null
+@@ -1 +0,0 @@
+-LGBModel
+\ No newline at end of file
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/cmd-sys.argv b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/cmd-sys.argv
+deleted file mode 100644
+index 7265c96..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/cmd-sys.argv
++++ /dev/null
+@@ -1 +0,0 @@
+-run_rdagent_workflow.py
+\ No newline at end of file
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.colsample_bytree b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.colsample_bytree
+deleted file mode 100644
+index e02e5fa..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.colsample_bytree
++++ /dev/null
+@@ -1 +0,0 @@
+-0.8879
+\ No newline at end of file
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.lambda_l1 b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.lambda_l1
+deleted file mode 100644
+index 5893e25..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.lambda_l1
++++ /dev/null
+@@ -1 +0,0 @@
+-205.6999
+\ No newline at end of file
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.lambda_l2 b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.lambda_l2
+deleted file mode 100644
+index 33d3922..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.lambda_l2
++++ /dev/null
+@@ -1 +0,0 @@
+-580.9768
+\ No newline at end of file
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.learning_rate b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.learning_rate
+deleted file mode 100644
+index 30e2fb4..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.learning_rate
++++ /dev/null
+@@ -1 +0,0 @@
+-0.05
+\ No newline at end of file
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.loss b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.loss
+deleted file mode 100644
+index f290a7a..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.loss
++++ /dev/null
+@@ -1 +0,0 @@
+-mse
+\ No newline at end of file
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.max_depth b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.max_depth
+deleted file mode 100644
+index 301160a..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.max_depth
++++ /dev/null
+@@ -1 +0,0 @@
+-8
+\ No newline at end of file
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.num_leaves b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.num_leaves
+deleted file mode 100644
+index 55596b2..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.num_leaves
++++ /dev/null
+@@ -1 +0,0 @@
+-210
+\ No newline at end of file
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.num_threads b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.num_threads
+deleted file mode 100644
+index 301160a..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.num_threads
++++ /dev/null
+@@ -1 +0,0 @@
+-8
+\ No newline at end of file
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.subsample b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.subsample
+deleted file mode 100644
+index f37011c..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.subsample
++++ /dev/null
+@@ -1 +0,0 @@
+-0.8789
+\ No newline at end of file
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/model_type b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/model_type
+deleted file mode 100644
+index b73c05e..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/model_type
++++ /dev/null
+@@ -1 +0,0 @@
+-lightgbm
+\ No newline at end of file
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/module_path b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/module_path
+deleted file mode 100644
+index bdb8957..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/module_path
++++ /dev/null
+@@ -1 +0,0 @@
+-qlib.contrib.model.gbdt
+\ No newline at end of file
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.runName b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.runName
+deleted file mode 100644
+index 25487e4..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.runName
++++ /dev/null
+@@ -1 +0,0 @@
+-mlflow_recorder
+\ No newline at end of file
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.source.git.commit b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.source.git.commit
+deleted file mode 100644
+index 4f648f0..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.source.git.commit
++++ /dev/null
+@@ -1 +0,0 @@
+-2298d45ab72f67811c21179421e55075f123c42f
+\ No newline at end of file
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.source.name b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.source.name
+deleted file mode 100644
+index 7265c96..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.source.name
++++ /dev/null
+@@ -1 +0,0 @@
+-run_rdagent_workflow.py
+\ No newline at end of file
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.source.type b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.source.type
+deleted file mode 100644
+index 0c2c1fe..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.source.type
++++ /dev/null
+@@ -1 +0,0 @@
+-LOCAL
+\ No newline at end of file
+diff --git a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.user b/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.user
+deleted file mode 100644
+index fdf63cf..0000000
+--- a/experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.user
++++ /dev/null
+@@ -1 +0,0 @@
+-air
+\ No newline at end of file
+diff --git a/experiments/409347409439738809/meta.yaml b/experiments/409347409439738809/meta.yaml
+deleted file mode 100644
+index 999128e..0000000
+--- a/experiments/409347409439738809/meta.yaml
++++ /dev/null
+@@ -1,6 +0,0 @@
+-artifact_location: file:///Users/air/QT_China/experiments/409347409439738809
+-creation_time: 1764046670311
+-experiment_id: '409347409439738809'
+-last_update_time: 1764046670311
+-lifecycle_stage: active
+-name: RDAgent_lightgbm
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/code_cached.txt b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/code_cached.txt
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/code_diff.txt b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/code_diff.txt
+deleted file mode 100644
+index f77d78c..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/code_diff.txt
++++ /dev/null
+@@ -1,12 +0,0 @@
+-diff --git a/.gitignore b/.gitignore
+-index 5b02444..de06843 100644
+---- a/.gitignore
+-+++ b/.gitignore
+-@@ -42,7 +42,6 @@ Thumbs.db
+- 
+- # MLflow
+- mlruns/
+--experiments/
+- 
+- # Temporary files
+- *.tmp
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/code_status.txt b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/code_status.txt
+deleted file mode 100644
+index 01a0b90..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/code_status.txt
++++ /dev/null
+@@ -1,25 +0,0 @@
+-On branch codex/0.0.5
+-Your branch is up to date with 'origin/codex/0.0.5'.
+-
+-Changes not staged for commit:
+-  (use "git add <file>..." to update what will be committed)
+-  (use "git restore <file>..." to discard changes in working directory)
+-	modified:   .gitignore
+-
+-Untracked files:
+-  (use "git add <file>..." to include in what will be committed)
+-	Users/
+-	configs/
+-	data/normalized/
+-	data/qlib_data/
+-	data/source/
+-	experiments/667700413800971036/
+-	experiments_full/
+-	qlib/qlib/_version.py
+-	qlib/scripts/data_collector/baostock_1d/
+-	qlib_bin.tar.gz
+-	run_qlib_full_workflow.py
+-	run_rd_agent_workflow.py
+-	run_rdagent_workflow.py
+-
+-no changes added to commit (use "git add" and/or "git commit -a")
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/label.pkl b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/label.pkl
+deleted file mode 100644
+index e774613..0000000
+Binary files a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/label.pkl and /dev/null differ
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/indicator_analysis_1day.pkl b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/indicator_analysis_1day.pkl
+deleted file mode 100644
+index 4820b71..0000000
+Binary files a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/indicator_analysis_1day.pkl and /dev/null differ
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/indicators_normal_1day.pkl b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/indicators_normal_1day.pkl
+deleted file mode 100644
+index 8a7aa41..0000000
+Binary files a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/indicators_normal_1day.pkl and /dev/null differ
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/indicators_normal_1day_obj.pkl b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/indicators_normal_1day_obj.pkl
+deleted file mode 100644
+index c1e597a..0000000
+Binary files a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/indicators_normal_1day_obj.pkl and /dev/null differ
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/port_analysis_1day.pkl b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/port_analysis_1day.pkl
+deleted file mode 100644
+index 1bd53c5..0000000
+Binary files a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/port_analysis_1day.pkl and /dev/null differ
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/positions_normal_1day.pkl b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/positions_normal_1day.pkl
+deleted file mode 100644
+index 41d2398..0000000
+Binary files a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/positions_normal_1day.pkl and /dev/null differ
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/report_normal_1day.pkl b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/report_normal_1day.pkl
+deleted file mode 100644
+index ceff8f9..0000000
+Binary files a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/report_normal_1day.pkl and /dev/null differ
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/pred.pkl b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/pred.pkl
+deleted file mode 100644
+index 2c925d2..0000000
+Binary files a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/pred.pkl and /dev/null differ
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/sig_analysis/ic.pkl b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/sig_analysis/ic.pkl
+deleted file mode 100644
+index e9b09bd..0000000
+Binary files a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/sig_analysis/ic.pkl and /dev/null differ
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/sig_analysis/ric.pkl b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/sig_analysis/ric.pkl
+deleted file mode 100644
+index 32d2e5f..0000000
+Binary files a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/sig_analysis/ric.pkl and /dev/null differ
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/xgboost_model.pkl b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/xgboost_model.pkl
+deleted file mode 100644
+index 3e545c6..0000000
+Binary files a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/xgboost_model.pkl and /dev/null differ
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/meta.yaml b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/meta.yaml
+deleted file mode 100644
+index a5878f3..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/meta.yaml
++++ /dev/null
+@@ -1,14 +0,0 @@
+-artifact_uri: file:///Users/air/QT_China/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts
+-end_time: 1764046657502
+-entry_point_name: ''
+-experiment_id: '667700413800971036'
+-lifecycle_stage: active
+-run_id: ca65177386664e00968d1eb5fa92ba53
+-run_name: mlflow_recorder
+-source_name: ''
+-source_type: 4
+-source_version: ''
+-start_time: 1764046650563
+-status: 3
+-tags: []
+-user_id: air
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.annualized_return b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.annualized_return
+deleted file mode 100644
+index 6d36ea7..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.annualized_return
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046657474 0.021611540948574863 0
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.information_ratio b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.information_ratio
+deleted file mode 100644
+index 1bcbec2..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.information_ratio
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046657474 0.18658701330513894 0
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.max_drawdown b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.max_drawdown
+deleted file mode 100644
+index f9386cd..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.max_drawdown
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046657498 -0.08633551763249883 0
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.mean b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.mean
+deleted file mode 100644
+index 0e5c1b8..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.mean
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046657473 9.080479390157505e-05 0
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.std b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.std
+deleted file mode 100644
+index f605623..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.std
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046657473 0.0075078544140995025 0
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.annualized_return b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.annualized_return
+deleted file mode 100644
+index 333990f..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.annualized_return
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046657454 0.04526388470994701 0
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.information_ratio b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.information_ratio
+deleted file mode 100644
+index 3d071e2..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.information_ratio
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046657469 0.39038369309183757 0
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.max_drawdown b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.max_drawdown
+deleted file mode 100644
+index 8ce7b4d..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.max_drawdown
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046657473 -0.08246194545778993 0
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.mean b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.mean
+deleted file mode 100644
+index d7fca13..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.mean
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046657449 0.00019018438953759248 0
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.std b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.std
+deleted file mode 100644
+index 89a09c3..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.std
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046657453 0.007515738779724403 0
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.ffr b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.ffr
+deleted file mode 100644
+index 98818be..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.ffr
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046657499 1.0 0
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.pa b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.pa
+deleted file mode 100644
+index 252cf57..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.pa
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046657499 0.0 0
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.pos b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.pos
+deleted file mode 100644
+index 9a39e99..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.pos
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046657500 0.0 0
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/IC b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/IC
+deleted file mode 100644
+index e6d41f0..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/IC
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046651491 0.06779243919944565 0
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/ICIR b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/ICIR
+deleted file mode 100644
+index 807987e..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/ICIR
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046651492 0.3878763780106159 0
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/Rank IC b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/Rank IC
+deleted file mode 100644
+index 265a8c1..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/Rank IC	
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046651493 0.009877439776010898 0
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/Rank ICIR b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/Rank ICIR
+deleted file mode 100644
+index bb798b2..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/Rank ICIR	
++++ /dev/null
+@@ -1 +0,0 @@
+-1764046651493 0.06827516045256858 0
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/class b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/class
+deleted file mode 100644
+index 6c2757a..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/class
++++ /dev/null
+@@ -1 +0,0 @@
+-XGBModel
+\ No newline at end of file
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/cmd-sys.argv b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/cmd-sys.argv
+deleted file mode 100644
+index 7265c96..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/cmd-sys.argv
++++ /dev/null
+@@ -1 +0,0 @@
+-run_rdagent_workflow.py
+\ No newline at end of file
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.colsample_bytree b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.colsample_bytree
+deleted file mode 100644
+index e02e5fa..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.colsample_bytree
++++ /dev/null
+@@ -1 +0,0 @@
+-0.8879
+\ No newline at end of file
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.eta b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.eta
+deleted file mode 100644
+index 7cba521..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.eta
++++ /dev/null
+@@ -1 +0,0 @@
+-0.0421
+\ No newline at end of file
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.eval_metric b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.eval_metric
+deleted file mode 100644
+index 0e57d99..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.eval_metric
++++ /dev/null
+@@ -1 +0,0 @@
+-rmse
+\ No newline at end of file
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.max_depth b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.max_depth
+deleted file mode 100644
+index 301160a..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.max_depth
++++ /dev/null
+@@ -1 +0,0 @@
+-8
+\ No newline at end of file
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.n_estimators b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.n_estimators
+deleted file mode 100644
+index eb1f494..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.n_estimators
++++ /dev/null
+@@ -1 +0,0 @@
+-500
+\ No newline at end of file
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.nthread b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.nthread
+deleted file mode 100644
+index 301160a..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.nthread
++++ /dev/null
+@@ -1 +0,0 @@
+-8
+\ No newline at end of file
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.subsample b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.subsample
+deleted file mode 100644
+index f37011c..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.subsample
++++ /dev/null
+@@ -1 +0,0 @@
+-0.8789
+\ No newline at end of file
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/model_type b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/model_type
+deleted file mode 100644
+index adb4f98..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/model_type
++++ /dev/null
+@@ -1 +0,0 @@
+-xgboost
+\ No newline at end of file
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/module_path b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/module_path
+deleted file mode 100644
+index b9eb8b2..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/module_path
++++ /dev/null
+@@ -1 +0,0 @@
+-qlib.contrib.model.xgboost
+\ No newline at end of file
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.runName b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.runName
+deleted file mode 100644
+index 25487e4..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.runName
++++ /dev/null
+@@ -1 +0,0 @@
+-mlflow_recorder
+\ No newline at end of file
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.source.git.commit b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.source.git.commit
+deleted file mode 100644
+index 4f648f0..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.source.git.commit
++++ /dev/null
+@@ -1 +0,0 @@
+-2298d45ab72f67811c21179421e55075f123c42f
+\ No newline at end of file
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.source.name b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.source.name
+deleted file mode 100644
+index 7265c96..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.source.name
++++ /dev/null
+@@ -1 +0,0 @@
+-run_rdagent_workflow.py
+\ No newline at end of file
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.source.type b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.source.type
+deleted file mode 100644
+index 0c2c1fe..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.source.type
++++ /dev/null
+@@ -1 +0,0 @@
+-LOCAL
+\ No newline at end of file
+diff --git a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.user b/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.user
+deleted file mode 100644
+index fdf63cf..0000000
+--- a/experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.user
++++ /dev/null
+@@ -1 +0,0 @@
+-air
+\ No newline at end of file
+diff --git a/experiments/667700413800971036/meta.yaml b/experiments/667700413800971036/meta.yaml
+deleted file mode 100644
+index d0b37b2..0000000
+--- a/experiments/667700413800971036/meta.yaml
++++ /dev/null
+@@ -1,6 +0,0 @@
+-artifact_location: file:///Users/air/QT_China/experiments/667700413800971036
+-creation_time: 1764046650452
+-experiment_id: '667700413800971036'
+-last_update_time: 1764046650452
+-lifecycle_stage: active
+-name: RDAgent_xgboost
+diff --git a/run_rdagent_workflow.py b/run_rdagent_workflow.py
+index 8c82682..853f8e1 100644
+--- a/run_rdagent_workflow.py
++++ b/run_rdagent_workflow.py
+@@ -139,7 +139,7 @@ def get_model_config(model_type: str, start_time: str, end_time: str):
+             },
+         },
+         "backtest": {
+-            "start_time": "2024-10-01",  # 回测开始日期
++            "start_time": "2024-10-08",  # 回测开始日期（国庆后）
+             "end_time": end_time,
+             "account": 100000000,
+             "benchmark": "SH000300",  # 沪深300指数
+@@ -201,7 +201,7 @@ def get_model_config(model_type: str, start_time: str, end_time: str):
+             "segments": {
+                 "train": (start_time, "2024-06-30"),
+                 "valid": ("2024-07-01", "2024-09-30"),
+-                "test": ("2024-10-01", end_time),
++                "test": ("2024-10-08", end_time),  # 国庆后开始测试
+             },
+         },
+     }
+@@ -398,7 +398,8 @@ def main():
+     calendar, stock_list = check_data_availability()
+     
+     # 获取实际数据的结束日期
+-    end_time = calendar[-1].strftime('%Y-%m-%d') if len(calendar) > 0 else '2025-11-25'
++    # 注意：crowd source 数据只更新到 2025-05-14
++    end_time = '2025-05-14'  # 使用数据实际可用的结束日期
+     start_time = '2024-01-01'
+     
+     print(f"\n📅 实验时间范围: {start_time} ~ {end_time}")

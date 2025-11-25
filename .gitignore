@@ -42,7 +42,14 @@ Thumbs.db
 
 # MLflow
 mlruns/
-experiments/
+
+# Data directories
+data/
+qlib_bin.tar.gz
+Users/
+
+# Experiments (keep structure but not all artifacts)
+experiments_full/
 
 # Temporary files
 *.tmp

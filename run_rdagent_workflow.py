@@ -139,7 +139,7 @@ def get_model_config(model_type: str, start_time: str, end_time: str):
             },
         },
         "backtest": {
-            "start_time": "2024-10-01",  # 回测开始日期
+            "start_time": "2024-10-08",  # 回测开始日期（国庆后）
             "end_time": end_time,
             "account": 100000000,
             "benchmark": "SH000300",  # 沪深300指数
@@ -201,7 +201,7 @@ def get_model_config(model_type: str, start_time: str, end_time: str):
             "segments": {
                 "train": (start_time, "2024-06-30"),
                 "valid": ("2024-07-01", "2024-09-30"),
-                "test": ("2024-10-01", end_time),
+                "test": ("2024-10-08", end_time),  # 国庆后开始测试
             },
         },
     }
@@ -398,7 +398,8 @@ def main():
     calendar, stock_list = check_data_availability()
     
     # 获取实际数据的结束日期
-    end_time = calendar[-1].strftime('%Y-%m-%d') if len(calendar) > 0 else '2025-11-25'
+    # 注意：crowd source 数据只更新到 2025-05-14
+    end_time = '2025-05-14'  # 使用数据实际可用的结束日期
     start_time = '2024-01-01'
     
     print(f"\n📅 实验时间范围: {start_time} ~ {end_time}")

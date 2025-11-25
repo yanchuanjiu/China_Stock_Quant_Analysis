@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/air/QT_China/experiments/587758757846340364/5fc68952759d41459320ac299b5e8d5e/artifacts
+end_time: 1764049230644
+entry_point_name: ''
+experiment_id: '587758757846340364'
+lifecycle_stage: active
+run_id: 5fc68952759d41459320ac299b5e8d5e
+run_name: mlflow_recorder
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1764049224308
+status: 3
+tags: []
+user_id: air

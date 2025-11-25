@@ -115,11 +115,11 @@ class TongHuaShunFetcher:
         ts_code = symbol.replace(".SH", "").replace(".SZ", "")
         if self._hist_ths:
             df = self._hist_ths(
-                symbol=ts_code,
-                start_date=self.start,
-                end_date=self.end,
-                adjust=self.adjust,
-            )
+            symbol=ts_code,
+            start_date=self.start,
+            end_date=self.end,
+            adjust=self.adjust,
+        )
         elif self._hist_general:
             df = self._hist_general(
                 symbol=ts_code,
