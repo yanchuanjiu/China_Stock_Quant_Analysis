@@ -1,0 +1,130 @@
+On branch codex/0.0.5
+Your branch is up to date with 'origin/codex/0.0.5'.
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   .gitignore
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/code_cached.txt
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/code_diff.txt
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/code_status.txt
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/label.pkl
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/lightgbm_model.pkl
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/indicator_analysis_1day.pkl
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/indicators_normal_1day.pkl
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/indicators_normal_1day_obj.pkl
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/port_analysis_1day.pkl
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/positions_normal_1day.pkl
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/portfolio_analysis/report_normal_1day.pkl
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/pred.pkl
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/sig_analysis/ic.pkl
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/artifacts/sig_analysis/ric.pkl
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/meta.yaml
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.annualized_return
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.information_ratio
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.max_drawdown
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.mean
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_with_cost.std
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.annualized_return
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.information_ratio
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.max_drawdown
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.mean
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.excess_return_without_cost.std
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.ffr
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.pa
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/1day.pos
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/IC
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/ICIR
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/Rank IC
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/Rank ICIR
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/l2.train
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/metrics/l2.valid
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/class
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/cmd-sys.argv
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.colsample_bytree
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.lambda_l1
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.lambda_l2
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.learning_rate
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.loss
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.max_depth
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.num_leaves
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.num_threads
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/kwargs.subsample
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/model_type
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/params/module_path
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.runName
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.source.git.commit
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.source.name
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.source.type
+	deleted:    experiments/409347409439738809/fe0af79c531f4fa1892a8fd4c6686daa/tags/mlflow.user
+	deleted:    experiments/409347409439738809/meta.yaml
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/code_cached.txt
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/code_diff.txt
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/code_status.txt
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/label.pkl
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/indicator_analysis_1day.pkl
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/indicators_normal_1day.pkl
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/indicators_normal_1day_obj.pkl
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/port_analysis_1day.pkl
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/positions_normal_1day.pkl
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/portfolio_analysis/report_normal_1day.pkl
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/pred.pkl
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/sig_analysis/ic.pkl
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/sig_analysis/ric.pkl
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/artifacts/xgboost_model.pkl
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/meta.yaml
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.annualized_return
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.information_ratio
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.max_drawdown
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.mean
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_with_cost.std
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.annualized_return
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.information_ratio
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.max_drawdown
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.mean
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.excess_return_without_cost.std
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.ffr
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.pa
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/1day.pos
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/IC
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/ICIR
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/Rank IC
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/metrics/Rank ICIR
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/class
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/cmd-sys.argv
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.colsample_bytree
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.eta
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.eval_metric
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.max_depth
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.n_estimators
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.nthread
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/kwargs.subsample
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/model_type
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/params/module_path
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.runName
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.source.git.commit
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.source.name
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.source.type
+	deleted:    experiments/667700413800971036/ca65177386664e00968d1eb5fa92ba53/tags/mlflow.user
+	deleted:    experiments/667700413800971036/meta.yaml
+	modified:   run_rdagent_workflow.py
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	Users/
+	configs/
+	data/normalized/
+	data/qlib_data/
+	data/source/
+	experiments/339731341714338232/
+	experiments/587758757846340364/
+	experiments_full/
+	output/visualizations/
+	qlib/qlib/_version.py
+	qlib/scripts/data_collector/baostock_1d/
+	qlib_bin.tar.gz
+	run_qlib_full_workflow.py
+	run_rd_agent_workflow.py
+	visualize_results.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
