@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>完整回测分析报告 (含最新数据)</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; background: #f5f7fa; }
+        .header { background: linear-gradient(135deg, #1a73e8, #0d47a1); color: white; padding: 30px 40px; }
+        .header h1 { margin: 0 0 10px; font-size: 28px; }
+        .header p { margin: 5px 0; opacity: 0.9; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px; }
+        .info-box { background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); text-align: center; }
+        .stat-value { font-size: 28px; font-weight: bold; }
+        .stat-label { color: #666; font-size: 13px; margin-top: 5px; }
+        .positive { color: #34a853; }
+        .negative { color: #ea4335; }
+        .chart-container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .chart-title { font-size: 18px; font-weight: 600; margin-bottom: 15px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px 12px; text-align: right; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; font-weight: 600; }
+        td:first-child, th:first-child { text-align: left; }
+        .buy { color: #ea4335; }
+        .sell { color: #34a853; }
+        .metrics-table { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .trades-container { max-height: 600px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 完整回测分析报告</h1>
+        <p>起始资金: ¥100,000 | 模型回测: 2024-11-15 ~ 2025-05-14 (118 天)</p>
+        <p>Buy & Hold: 2024-11-15 ~ 2025-11-25 (250 天) ⭐ 包含 Baostock 最新数据</p>
+    </div>
+    
+    <div class="container">
+        <div class="info-box">
+            <strong>📢 数据说明:</strong> 模型回测使用 Qlib 数据 (截止 2025-05-14)，Buy & Hold 使用合并数据 (含 Baostock 2025-05-15 ~ 2025-11-25 共 132 天新数据)
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value positive">+46.37%</div>
+                <div class="stat-label">LightGBM 收益 (118天)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value positive">+24.39%</div>
+                <div class="stat-label">XGBoost 收益 (118天)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value positive">+201.83%</div>
+                <div class="stat-label">Buy & Hold (250天)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">3.16</div>
+                <div class="stat-label">LightGBM Sharpe</div>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <div class="chart-title">📈 账户价值对比</div>
+            <div id="value-chart" style="height: 400px;"></div>
+        </div>
+        
+        <div class="chart-container">
+            <div class="chart-title">📊 累计收益率对比</div>
+            <div id="return-chart" style="height: 400px;"></div>
+        </div>
+        
+        <div class="metrics-table">
+            <div class="chart-title">📋 模型指标对比</div>
+            <table>
+                <tr><th>指标</th><th>LightGBM (118天)</th><th>XGBoost (118天)</th><th>Buy & Hold (250天)</th></tr>
+                <tr><td>总收益率</td><td class="positive">+46.37%</td><td class="positive">+24.39%</td><td class="positive">+201.83%</td></tr>
+                <tr><td>年化收益率</td><td>+125.60%</td><td>+59.39%</td><td>+205.87%</td></tr>
+                <tr><td>年化波动率</td><td>25.91%</td><td>29.72%</td><td>159.11%</td></tr>
+                <tr><td>Sharpe Ratio</td><td><b>3.1576</b></td><td><b>1.6168</b></td><td><b>1.0973</b></td></tr>
+                <tr><td>Sortino Ratio</td><td>4.8800</td><td>2.2664</td><td>11.0219</td></tr>
+                <tr><td>最大回撤</td><td class="negative">-6.82%</td><td class="negative">-14.32%</td><td class="negative">-19.76%</td></tr>
+                <tr><td>Calmar Ratio</td><td>18.4201</td><td>4.1470</td><td>10.4179</td></tr>
+                <tr><td>胜率</td><td>58.47%</td><td>56.78%</td><td>54.22%</td></tr>
+            </table>
+        </div>
+        
+        <div class="metrics-table">
+            <div class="chart-title">📝 LightGBM 完整交易记录 (438 条)</div>
+            <div class="trades-container">
+            <table>
+                <tr><th>日期</th><th>股票</th><th>操作</th><th>数量</th><th>价格</th><th>金额</th></tr>
+                <tr><td>2024-11-18</td><td>SH601888</td><td class='buy'>BUY</td><td>934</td><td>¥10.36</td><td>¥9,679</td></tr>
+<tr><td>2024-11-18</td><td>SZ002129</td><td class='buy'>BUY</td><td>2,423</td><td>¥3.87</td><td>¥9,380</td></tr>
+<tr><td>2024-11-18</td><td>SZ000708</td><td class='buy'>BUY</td><td>1,391</td><td>¥6.78</td><td>¥9,427</td></tr>
+<tr><td>2024-11-18</td><td>SZ000661</td><td class='buy'>BUY</td><td>133</td><td>¥71.97</td><td>¥9,605</td></tr>
+<tr><td>2024-11-18</td><td>SZ002050</td><td class='buy'>BUY</td><td>183</td><td>¥51.18</td><td>¥9,377</td></tr>
+<tr><td>2024-11-18</td><td>SH603195</td><td class='buy'>BUY</td><td>5,313</td><td>¥1.84</td><td>¥9,763</td></tr>
+<tr><td>2024-11-18</td><td>SZ002311</td><td class='buy'>BUY</td><td>1,241</td><td>¥7.68</td><td>¥9,533</td></tr>
+<tr><td>2024-11-18</td><td>SH600031</td><td class='buy'>BUY</td><td>136</td><td>¥69.53</td><td>¥9,440</td></tr>
+<tr><td>2024-11-18</td><td>SZ002475</td><td class='buy'>BUY</td><td>269</td><td>¥34.29</td><td>¥9,218</td></tr>
+<tr><td>2024-11-18</td><td>SH600276</td><td class='buy'>BUY</td><td>21</td><td>¥451.30</td><td>¥9,700</td></tr>
+<tr><td>2024-11-19</td><td>SZ000786</td><td class='buy'>BUY</td><td>613</td><td>¥17.68</td><td>¥10,832</td></tr>
+<tr><td>2024-11-19</td><td>SZ002475</td><td class='sell'>SELL</td><td>269</td><td>¥34.29</td><td>¥9,218</td></tr>
+<tr><td>2024-11-19</td><td>SZ002821</td><td class='buy'>BUY</td><td>1,263</td><td>¥8.47</td><td>¥10,700</td></tr>
+<tr><td>2024-11-19</td><td>SZ002129</td><td class='sell'>SELL</td><td>2,423</td><td>¥3.87</td><td>¥9,380</td></tr>
+<tr><td>2024-11-20</td><td>SZ000876</td><td class='buy'>BUY</td><td>276</td><td>¥34.94</td><td>¥9,631</td></tr>
+<tr><td>2024-11-20</td><td>SZ000708</td><td class='sell'>SELL</td><td>1,391</td><td>¥6.64</td><td>¥9,240</td></tr>
+<tr><td>2024-11-20</td><td>SH601888</td><td class='sell'>SELL</td><td>934</td><td>¥10.34</td><td>¥9,656</td></tr>
+<tr><td>2024-11-20</td><td>SZ300347</td><td class='buy'>BUY</td><td>474</td><td>¥20.01</td><td>¥9,483</td></tr>
+<tr><td>2024-11-21</td><td>SZ000786</td><td class='sell'>SELL</td><td>613</td><td>¥18.73</td><td>¥11,472</td></tr>
+<tr><td>2024-11-21</td><td>SH600745</td><td class='buy'>BUY</td><td>539</td><td>¥11.20</td><td>¥6,041</td></tr>
+<tr><td>2024-11-21</td><td>SH600026</td><td class='buy'>BUY</td><td>2,331</td><td>¥2.57</td><td>¥5,979</td></tr>
+<tr><td>2024-11-22</td><td>SZ000661</td><td class='sell'>SELL</td><td>133</td><td>¥72.80</td><td>¥9,714</td></tr>
+<tr><td>2024-11-22</td><td>SZ002709</td><td class='buy'>BUY</td><td>3,709</td><td>¥5.43</td><td>¥20,127</td></tr>
+<tr><td>2024-11-22</td><td>SZ300347</td><td class='sell'>SELL</td><td>474</td><td>¥20.20</td><td>¥9,571</td></tr>
+<tr><td>2024-11-25</td><td>SZ000895</td><td class='buy'>BUY</td><td>182</td><td>¥83.24</td><td>¥15,129</td></tr>
+<tr><td>2024-11-25</td><td>SH600436</td><td class='buy'>BUY</td><td>136</td><td>¥110.14</td><td>¥15,017</td></tr>
+<tr><td>2024-11-25</td><td>SZ002821</td><td class='sell'>SELL</td><td>1,263</td><td>¥8.48</td><td>¥10,709</td></tr>
+<tr><td>2024-11-25</td><td>SZ002709</td><td class='sell'>SELL</td><td>3,709</td><td>¥5.43</td><td>¥20,127</td></tr>
+<tr><td>2024-11-26</td><td>SH600745</td><td class='sell'>SELL</td><td>539</td><td>¥11.35</td><td>¥6,120</td></tr>
+<tr><td>2024-11-26</td><td>SH600031</td><td class='sell'>SELL</td><td>136</td><td>¥70.56</td><td>¥9,580</td></tr>
+<tr><td>2024-11-26</td><td>SZ000792</td><td class='buy'>BUY</td><td>1,188</td><td>¥6.88</td><td>¥8,166</td></tr>
+<tr><td>2024-11-26</td><td>SH600584</td><td class='buy'>BUY</td><td>1,375</td><td>¥6.10</td><td>¥8,393</td></tr>
+<tr><td>2024-11-27</td><td>SZ300782</td><td class='buy'>BUY</td><td>1,172</td><td>¥10.40</td><td>¥12,197</td></tr>
+<tr><td>2024-11-27</td><td>SZ000895</td><td class='sell'>SELL</td><td>182</td><td>¥82.48</td><td>¥14,989</td></tr>
+<tr><td>2024-11-27</td><td>SZ002709</td><td class='buy'>BUY</td><td>2,277</td><td>¥5.53</td><td>¥12,587</td></tr>
+<tr><td>2024-11-27</td><td>SH600276</td><td class='sell'>SELL</td><td>21</td><td>¥450.41</td><td>¥9,681</td></tr>
+<tr><td>2024-11-28</td><td>SZ000876</td><td class='sell'>SELL</td><td>276</td><td>¥35.57</td><td>¥9,806</td></tr>
+<tr><td>2024-11-28</td><td>SH600584</td><td class='sell'>SELL</td><td>1,375</td><td>¥6.20</td><td>¥8,527</td></tr>
+<tr><td>2024-11-28</td><td>SZ002371</td><td class='buy'>BUY</td><td>839</td><td>¥11.02</td><td>¥9,245</td></tr>
+<tr><td>2024-11-28</td><td>SZ002007</td><td class='buy'>BUY</td><td>71</td><td>¥129.45</td><td>¥9,128</td></tr>
+<tr><td>2024-11-29</td><td>SH600436</td><td class='sell'>SELL</td><td>136</td><td>¥108.16</td><td>¥14,748</td></tr>
+<tr><td>2024-11-29</td><td>SH603501</td><td class='buy'>BUY</td><td>624</td><td>¥16.99</td><td>¥10,599</td></tr>
+<tr><td>2024-11-29</td><td>SH600026</td><td class='sell'>SELL</td><td>2,331</td><td>¥2.74</td><td>¥6,386</td></tr>
+<tr><td>2024-11-29</td><td>SZ002603</td><td class='buy'>BUY</td><td>5,187</td><td>¥2.06</td><td>¥10,693</td></tr>
+<tr><td>2024-12-02</td><td>SH601012</td><td class='buy'>BUY</td><td>794</td><td>¥11.72</td><td>¥9,306</td></tr>
+<tr><td>2024-12-02</td><td>SZ000792</td><td class='sell'>SELL</td><td>1,188</td><td>¥7.03</td><td>¥8,346</td></tr>
+<tr><td>2024-12-02</td><td>SH603501</td><td class='sell'>SELL</td><td>624</td><td>¥16.99</td><td>¥10,599</td></tr>
+<tr><td>2024-12-02</td><td>SH600132</td><td class='buy'>BUY</td><td>728</td><td>¥13.10</td><td>¥9,536</td></tr>
+<tr><td>2024-12-03</td><td>SZ000708</td><td class='buy'>BUY</td><td>2,385</td><td>¥4.11</td><td>¥9,812</td></tr>
+<tr><td>2024-12-03</td><td>SH603195</td><td class='sell'>SELL</td><td>5,313</td><td>¥1.88</td><td>¥9,987</td></tr>
+<tr><td>2024-12-03</td><td>SZ300015</td><td class='buy'>BUY</td><td>438</td><td>¥22.14</td><td>¥9,704</td></tr>
+<tr><td>2024-12-03</td><td>SH600132</td><td class='sell'>SELL</td><td>728</td><td>¥13.10</td><td>¥9,536</td></tr>
+<tr><td>2024-12-04</td><td>SH601799</td><td class='buy'>BUY</td><td>1,625</td><td>¥6.40</td><td>¥10,395</td></tr>
+<tr><td>2024-12-04</td><td>SH603986</td><td class='buy'>BUY</td><td>691</td><td>¥14.87</td><td>¥10,278</td></tr>
+<tr><td>2024-12-04</td><td>SZ002050</td><td class='sell'>SELL</td><td>183</td><td>¥56.09</td><td>¥10,276</td></tr>
+<tr><td>2024-12-04</td><td>SZ002603</td><td class='sell'>SELL</td><td>5,187</td><td>¥1.98</td><td>¥10,274</td></tr>
+<tr><td>2024-12-05</td><td>SZ000708</td><td class='sell'>SELL</td><td>2,385</td><td>¥4.22</td><td>¥10,053</td></tr>
+<tr><td>2024-12-05</td><td>SH603019</td><td class='buy'>BUY</td><td>1,161</td><td>¥8.77</td><td>¥10,184</td></tr>
+<tr><td>2024-12-05</td><td>SH600026</td><td class='buy'>BUY</td><td>3,693</td><td>¥2.61</td><td>¥9,626</td></tr>
+<tr><td>2024-12-05</td><td>SZ002007</td><td class='sell'>SELL</td><td>71</td><td>¥137.88</td><td>¥9,722</td></tr>
+<tr><td>2024-12-06</td><td>SZ300628</td><td class='buy'>BUY</td><td>14,847</td><td>¥0.74</td><td>¥10,933</td></tr>
+<tr><td>2024-12-06</td><td>SZ002709</td><td class='sell'>SELL</td><td>2,277</td><td>¥5.53</td><td>¥12,597</td></tr>
+<tr><td>2024-12-06</td><td>SZ002648</td><td class='buy'>BUY</td><td>6,658</td><td>¥1.73</td><td>¥11,499</td></tr>
+<tr><td>2024-12-06</td><td>SZ300015</td><td class='sell'>SELL</td><td>438</td><td>¥22.60</td><td>¥9,909</td></tr>
+<tr><td>2024-12-09</td><td>SH601698</td><td class='buy'>BUY</td><td>1,441</td><td>¥3.95</td><td>¥5,689</td></tr>
+<tr><td>2024-12-09</td><td>SZ002311</td><td class='sell'>SELL</td><td>1,241</td><td>¥8.30</td><td>¥10,302</td></tr>
+<tr><td>2024-12-10</td><td>SH601799</td><td class='sell'>SELL</td><td>1,625</td><td>¥6.31</td><td>¥10,248</td></tr>
+<tr><td>2024-12-10</td><td>SZ002648</td><td class='sell'>SELL</td><td>6,658</td><td>¥1.73</td><td>¥11,549</td></tr>
+<tr><td>2024-12-10</td><td>SZ002916</td><td class='buy'>BUY</td><td>1,846</td><td>¥7.63</td><td>¥14,083</td></tr>
+<tr><td>2024-12-11</td><td>SZ300782</td><td class='sell'>SELL</td><td>1,172</td><td>¥12.89</td><td>¥15,110</td></tr>
+<tr><td>2024-12-11</td><td>SH600584</td><td class='buy'>BUY</td><td>1,654</td><td>¥7.33</td><td>¥12,130</td></tr>
+<tr><td>2024-12-11</td><td>SZ000408</td><td class='buy'>BUY</td><td>10,837</td><td>¥1.12</td><td>¥12,107</td></tr>
+<tr><td>2024-12-11</td><td>SH600026</td><td class='sell'>SELL</td><td>3,693</td><td>¥2.32</td><td>¥8,577</td></tr>
+<tr><td>2024-12-12</td><td>SH600584</td><td class='sell'>SELL</td><td>1,654</td><td>¥7.33</td><td>¥12,130</td></tr>
+<tr><td>2024-12-12</td><td>SZ000708</td><td class='buy'>BUY</td><td>3,059</td><td>¥4.14</td><td>¥12,674</td></tr>
+<tr><td>2024-12-12</td><td>SH600026</td><td class='buy'>BUY</td><td>5,544</td><td>¥2.22</td><td>¥12,303</td></tr>
+<tr><td>2024-12-12</td><td>SH603986</td><td class='sell'>SELL</td><td>691</td><td>¥19.16</td><td>¥13,242</td></tr>
+<tr><td>2024-12-13</td><td>SZ300782</td><td class='buy'>BUY</td><td>943</td><td>¥12.81</td><td>¥12,082</td></tr>
+<tr><td>2024-12-13</td><td>SH603019</td><td class='sell'>SELL</td><td>1,161</td><td>¥10.86</td><td>¥12,610</td></tr>
+<tr><td>2024-12-13</td><td>SZ002371</td><td class='sell'>SELL</td><td>839</td><td>¥12.64</td><td>¥10,604</td></tr>
+<tr><td>2024-12-16</td><td>SH600584</td><td class='buy'>BUY</td><td>1,629</td><td>¥7.64</td><td>¥12,445</td></tr>
+<tr><td>2024-12-16</td><td>SZ300628</td><td class='sell'>SELL</td><td>14,847</td><td>¥0.79</td><td>¥11,714</td></tr>
+<tr><td>2024-12-16</td><td>SZ000408</td><td class='sell'>SELL</td><td>10,837</td><td>¥1.08</td><td>¥11,674</td></tr>
+<tr><td>2024-12-16</td><td>SH603501</td><td class='buy'>BUY</td><td>566</td><td>¥20.57</td><td>¥11,653</td></tr>
+<tr><td>2024-12-17</td><td>SH603501</td><td class='sell'>SELL</td><td>566</td><td>¥20.57</td><td>¥11,653</td></tr>
+<tr><td>2024-12-17</td><td>SH601012</td><td class='sell'>SELL</td><td>794</td><td>¥13.47</td><td>¥10,692</td></tr>
+<tr><td>2024-12-17</td><td>SH601689</td><td class='buy'>BUY</td><td>4,930</td><td>¥2.29</td><td>¥11,300</td></tr>
+<tr><td>2024-12-18</td><td>SH601698</td><td class='sell'>SELL</td><td>1,441</td><td>¥4.22</td><td>¥6,080</td></tr>
+<tr><td>2024-12-18</td><td>SH600438</td><td class='buy'>BUY</td><td>644</td><td>¥16.37</td><td>¥10,553</td></tr>
+<tr><td>2024-12-18</td><td>SZ002916</td><td class='sell'>SELL</td><td>1,846</td><td>¥7.81</td><td>¥14,415</td></tr>
+<tr><td>2024-12-18</td><td>SZ300142</td><td class='buy'>BUY</td><td>2,115</td><td>¥5.19</td><td>¥10,984</td></tr>
+<tr><td>2024-12-19</td><td>SZ300142</td><td class='sell'>SELL</td><td>2,115</td><td>¥5.19</td><td>¥10,984</td></tr>
+<tr><td>2024-12-19</td><td>SZ002049</td><td class='buy'>BUY</td><td>224</td><td>¥49.54</td><td>¥11,083</td></tr>
+<tr><td>2024-12-19</td><td>SH600026</td><td class='sell'>SELL</td><td>5,544</td><td>¥2.12</td><td>¥11,761</td></tr>
+<tr><td>2024-12-19</td><td>SZ002371</td><td class='buy'>BUY</td><td>878</td><td>¥13.10</td><td>¥11,505</td></tr>
+<tr><td>2024-12-20</td><td>SZ002709</td><td class='buy'>BUY</td><td>1,488</td><td>¥5.90</td><td>¥8,780</td></tr>
+<tr><td>2024-12-20</td><td>SH600438</td><td class='sell'>SELL</td><td>644</td><td>¥16.33</td><td>¥10,523</td></tr>
+<tr><td>2024-12-20</td><td>SH600745</td><td class='buy'>BUY</td><td>643</td><td>¥12.65</td><td>¥8,139</td></tr>
+<tr><td>2024-12-23</td><td>SZ300782</td><td class='sell'>SELL</td><td>943</td><td>¥12.21</td><td>¥11,517</td></tr>
+<tr><td>2024-12-23</td><td>SH600132</td><td class='buy'>BUY</td><td>647</td><td>¥14.82</td><td>¥9,586</td></tr>
+<tr><td>2024-12-24</td><td>SZ300628</td><td class='buy'>BUY</td><td>23,591</td><td>¥0.50</td><td>¥11,811</td></tr>
+<tr><td>2024-12-24</td><td>SH600745</td><td class='sell'>SELL</td><td>643</td><td>¥12.95</td><td>¥8,331</td></tr>
+<tr><td>2024-12-24</td><td>SZ002371</td><td class='sell'>SELL</td><td>878</td><td>¥14.87</td><td>¥13,053</td></tr>
+<tr><td>2024-12-25</td><td>SZ002709</td><td class='sell'>SELL</td><td>1,488</td><td>¥5.78</td><td>¥8,601</td></tr>
+<tr><td>2024-12-25</td><td>SZ002920</td><td class='buy'>BUY</td><td>6,433</td><td>¥1.68</td><td>¥10,806</td></tr>
+<tr><td>2024-12-25</td><td>SH600926</td><td class='buy'>BUY</td><td>12,142</td><td>¥0.91</td><td>¥10,998</td></tr>
+<tr><td>2024-12-25</td><td>SH600132</td><td class='sell'>SELL</td><td>647</td><td>¥14.54</td><td>¥9,405</td></tr>
+<tr><td>2024-12-26</td><td>SH600026</td><td class='buy'>BUY</td><td>5,618</td><td>¥1.96</td><td>¥11,022</td></tr>
+<tr><td>2024-12-26</td><td>SH600584</td><td class='sell'>SELL</td><td>1,629</td><td>¥8.03</td><td>¥13,086</td></tr>
+<tr><td>2024-12-26</td><td>SZ300223</td><td class='buy'>BUY</td><td>1,572</td><td>¥6.65</td><td>¥10,455</td></tr>
+<tr><td>2024-12-26</td><td>SH601689</td><td class='sell'>SELL</td><td>4,930</td><td>¥2.08</td><td>¥10,234</td></tr>
+<tr><td>2024-12-27</td><td>SZ000708</td><td class='sell'>SELL</td><td>3,059</td><td>¥3.87</td><td>¥11,837</td></tr>
+<tr><td>2024-12-27</td><td>SZ002049</td><td class='sell'>SELL</td><td>224</td><td>¥50.81</td><td>¥11,367</td></tr>
+<tr><td>2024-12-27</td><td>SZ002603</td><td class='buy'>BUY</td><td>6,608</td><td>¥1.77</td><td>¥11,677</td></tr>
+<tr><td>2024-12-27</td><td>SH601865</td><td class='buy'>BUY</td><td>12,442</td><td>¥0.88</td><td>¥10,969</td></tr>
+<tr><td>2024-12-30</td><td>SZ002920</td><td class='sell'>SELL</td><td>6,433</td><td>¥1.67</td><td>¥10,724</td></tr>
+<tr><td>2024-12-30</td><td>SH600926</td><td class='sell'>SELL</td><td>12,142</td><td>¥0.89</td><td>¥10,800</td></tr>
+<tr><td>2024-12-30</td><td>SH600570</td><td class='buy'>BUY</td><td>69</td><td>¥165.50</td><td>¥11,396</td></tr>
+<tr><td>2024-12-31</td><td>SZ300782</td><td class='buy'>BUY</td><td>960</td><td>¥10.90</td><td>¥10,462</td></tr>
+<tr><td>2024-12-31</td><td>SZ000408</td><td class='buy'>BUY</td><td>7,823</td><td>¥1.41</td><td>¥11,042</td></tr>
+<tr><td>2024-12-31</td><td>SZ300223</td><td class='sell'>SELL</td><td>1,572</td><td>¥6.48</td><td>¥10,180</td></tr>
+<tr><td>2024-12-31</td><td>SH600570</td><td class='sell'>SELL</td><td>69</td><td>¥165.50</td><td>¥11,396</td></tr>
+<tr><td>2025-01-02</td><td>SH600809</td><td class='buy'>BUY</td><td>210</td><td>¥54.07</td><td>¥11,355</td></tr>
+<tr><td>2025-01-02</td><td>SZ300014</td><td class='buy'>BUY</td><td>2,999</td><td>¥3.74</td><td>¥11,217</td></tr>
+<tr><td>2025-01-02</td><td>SZ000408</td><td class='sell'>SELL</td><td>7,823</td><td>¥1.41</td><td>¥11,042</td></tr>
+<tr><td>2025-01-02</td><td>SZ300502</td><td class='buy'>BUY</td><td>4,293</td><td>¥2.63</td><td>¥11,273</td></tr>
+<tr><td>2025-01-02</td><td>SZ002603</td><td class='sell'>SELL</td><td>6,608</td><td>¥1.70</td><td>¥11,240</td></tr>
+<tr><td>2025-01-03</td><td>SH600600</td><td class='buy'>BUY</td><td>1,051</td><td>¥10.76</td><td>¥11,307</td></tr>
+<tr><td>2025-01-03</td><td>SH600026</td><td class='sell'>SELL</td><td>5,618</td><td>¥1.94</td><td>¥10,872</td></tr>
+<tr><td>2025-01-03</td><td>SH601865</td><td class='sell'>SELL</td><td>12,442</td><td>¥0.87</td><td>¥10,836</td></tr>
+<tr><td>2025-01-06</td><td>SH603659</td><td class='buy'>BUY</td><td>2,927</td><td>¥3.74</td><td>¥10,960</td></tr>
+<tr><td>2025-01-06</td><td>SZ300782</td><td class='sell'>SELL</td><td>960</td><td>¥10.80</td><td>¥10,363</td></tr>
+<tr><td>2025-01-06</td><td>SH601888</td><td class='buy'>BUY</td><td>809</td><td>¥13.66</td><td>¥11,045</td></tr>
+<tr><td>2025-01-06</td><td>SZ300628</td><td class='sell'>SELL</td><td>23,591</td><td>¥0.50</td><td>¥11,776</td></tr>
+<tr><td>2025-01-06</td><td>SZ300832</td><td class='buy'>BUY</td><td>3,099</td><td>¥3.61</td><td>¥11,191</td></tr>
+<tr><td>2025-01-06</td><td>SH601689</td><td class='buy'>BUY</td><td>4,728</td><td>¥2.31</td><td>¥10,909</td></tr>
+<tr><td>2025-01-07</td><td>SH600809</td><td class='sell'>SELL</td><td>210</td><td>¥57.26</td><td>¥12,025</td></tr>
+<tr><td>2025-01-07</td><td>SZ002714</td><td class='buy'>BUY</td><td>726</td><td>¥16.37</td><td>¥11,882</td></tr>
+<tr><td>2025-01-07</td><td>SZ300502</td><td class='sell'>SELL</td><td>4,293</td><td>¥2.78</td><td>¥11,931</td></tr>
+<tr><td>2025-01-07</td><td>SH603259</td><td class='buy'>BUY</td><td>3,323</td><td>¥3.53</td><td>¥11,721</td></tr>
+<tr><td>2025-01-08</td><td>SH603659</td><td class='sell'>SELL</td><td>2,927</td><td>¥3.87</td><td>¥11,333</td></tr>
+<tr><td>2025-01-08</td><td>SH601888</td><td class='sell'>SELL</td><td>809</td><td>¥13.35</td><td>¥10,795</td></tr>
+<tr><td>2025-01-08</td><td>SZ002920</td><td class='buy'>BUY</td><td>6,346</td><td>¥1.87</td><td>¥11,873</td></tr>
+<tr><td>2025-01-08</td><td>SZ000661</td><td class='buy'>BUY</td><td>267</td><td>¥42.39</td><td>¥11,313</td></tr>
+<tr><td>2025-01-09</td><td>SZ300014</td><td class='sell'>SELL</td><td>2,999</td><td>¥4.06</td><td>¥12,183</td></tr>
+<tr><td>2025-01-09</td><td>SZ002714</td><td class='sell'>SELL</td><td>726</td><td>¥16.19</td><td>¥11,750</td></tr>
+<tr><td>2025-01-09</td><td>SZ002938</td><td class='buy'>BUY</td><td>5,361</td><td>¥2.20</td><td>¥11,817</td></tr>
+<tr><td>2025-01-10</td><td>SH600600</td><td class='sell'>SELL</td><td>1,051</td><td>¥11.44</td><td>¥12,023</td></tr>
+<tr><td>2025-01-10</td><td>SZ000661</td><td class='sell'>SELL</td><td>267</td><td>¥42.67</td><td>¥11,386</td></tr>
+<tr><td>2025-01-13</td><td>SZ002714</td><td class='buy'>BUY</td><td>713</td><td>¥15.98</td><td>¥11,390</td></tr>
+<tr><td>2025-01-13</td><td>SZ002241</td><td class='buy'>BUY</td><td>550</td><td>¥20.16</td><td>¥11,088</td></tr>
+<tr><td>2025-01-13</td><td>SH601689</td><td class='sell'>SELL</td><td>4,728</td><td>¥2.40</td><td>¥11,352</td></tr>
+<tr><td>2025-01-13</td><td>SH603259</td><td class='sell'>SELL</td><td>3,323</td><td>¥3.71</td><td>¥12,324</td></tr>
+<tr><td>2025-01-13</td><td>SZ001979</td><td class='buy'>BUY</td><td>2,355</td><td>¥4.90</td><td>¥11,528</td></tr>
+<tr><td>2025-01-13</td><td>SH600415</td><td class='buy'>BUY</td><td>69</td><td>¥170.09</td><td>¥11,700</td></tr>
+<tr><td>2025-01-14</td><td>SH603392</td><td class='buy'>BUY</td><td>1,018</td><td>¥11.51</td><td>¥11,717</td></tr>
+<tr><td>2025-01-14</td><td>SZ000408</td><td class='buy'>BUY</td><td>7,170</td><td>¥1.77</td><td>¥12,724</td></tr>
+<tr><td>2025-01-14</td><td>SZ000661</td><td class='buy'>BUY</td><td>272</td><td>¥42.98</td><td>¥11,681</td></tr>
+<tr><td>2025-01-14</td><td>SZ001979</td><td class='sell'>SELL</td><td>2,355</td><td>¥4.90</td><td>¥11,528</td></tr>
+<tr><td>2025-01-14</td><td>SH600415</td><td class='sell'>SELL</td><td>69</td><td>¥170.09</td><td>¥11,700</td></tr>
+<tr><td>2025-01-15</td><td>SZ002938</td><td class='sell'>SELL</td><td>5,361</td><td>¥2.16</td><td>¥11,573</td></tr>
+<tr><td>2025-01-15</td><td>SZ000408</td><td class='sell'>SELL</td><td>7,170</td><td>¥1.77</td><td>¥12,724</td></tr>
+<tr><td>2025-01-15</td><td>SZ300759</td><td class='buy'>BUY</td><td>1,691</td><td>¥7.15</td><td>¥12,100</td></tr>
+<tr><td>2025-01-15</td><td>SH601689</td><td class='buy'>BUY</td><td>4,869</td><td>¥2.45</td><td>¥11,931</td></tr>
+<tr><td>2025-01-16</td><td>SH603392</td><td class='sell'>SELL</td><td>1,018</td><td>¥10.56</td><td>¥10,752</td></tr>
+<tr><td>2025-01-16</td><td>SZ000408</td><td class='buy'>BUY</td><td>7,172</td><td>¥1.67</td><td>¥11,967</td></tr>
+<tr><td>2025-01-16</td><td>SZ000661</td><td class='sell'>SELL</td><td>272</td><td>¥45.64</td><td>¥12,405</td></tr>
+<tr><td>2025-01-16</td><td>SH601100</td><td class='buy'>BUY</td><td>1,615</td><td>¥7.31</td><td>¥11,803</td></tr>
+<tr><td>2025-01-17</td><td>SZ000408</td><td class='sell'>SELL</td><td>7,172</td><td>¥1.67</td><td>¥11,967</td></tr>
+<tr><td>2025-01-17</td><td>SZ000983</td><td class='buy'>BUY</td><td>3,860</td><td>¥3.13</td><td>¥12,071</td></tr>
+<tr><td>2025-01-20</td><td>SZ300832</td><td class='sell'>SELL</td><td>3,099</td><td>¥3.55</td><td>¥10,998</td></tr>
+<tr><td>2025-01-20</td><td>SZ300413</td><td class='buy'>BUY</td><td>1,484</td><td>¥7.93</td><td>¥11,771</td></tr>
+<tr><td>2025-01-20</td><td>SZ300759</td><td class='sell'>SELL</td><td>1,691</td><td>¥7.66</td><td>¥12,961</td></tr>
+<tr><td>2025-01-20</td><td>SZ300502</td><td class='buy'>BUY</td><td>4,103</td><td>¥2.86</td><td>¥11,747</td></tr>
+<tr><td>2025-01-21</td><td>SZ002920</td><td class='sell'>SELL</td><td>6,346</td><td>¥1.89</td><td>¥11,992</td></tr>
+<tr><td>2025-01-21</td><td>SH600918</td><td class='buy'>BUY</td><td>5,377</td><td>¥2.26</td><td>¥12,144</td></tr>
+<tr><td>2025-01-21</td><td>SZ002938</td><td class='buy'>BUY</td><td>5,745</td><td>¥2.09</td><td>¥12,010</td></tr>
+<tr><td>2025-01-21</td><td>SZ300759</td><td class='buy'>BUY</td><td>1,581</td><td>¥7.66</td><td>¥12,103</td></tr>
+<tr><td>2025-01-21</td><td>SZ000983</td><td class='sell'>SELL</td><td>3,860</td><td>¥3.12</td><td>¥12,046</td></tr>
+<tr><td>2025-01-22</td><td>SH600600</td><td class='buy'>BUY</td><td>1,088</td><td>¥10.96</td><td>¥11,931</td></tr>
+<tr><td>2025-01-22</td><td>SZ002714</td><td class='sell'>SELL</td><td>713</td><td>¥15.85</td><td>¥11,300</td></tr>
+<tr><td>2025-01-22</td><td>SZ300450</td><td class='buy'>BUY</td><td>628</td><td>¥18.82</td><td>¥11,831</td></tr>
+<tr><td>2025-01-22</td><td>SZ300759</td><td class='sell'>SELL</td><td>1,581</td><td>¥7.66</td><td>¥12,103</td></tr>
+<tr><td>2025-01-23</td><td>SZ002920</td><td class='buy'>BUY</td><td>6,415</td><td>¥1.81</td><td>¥11,609</td></tr>
+<tr><td>2025-01-23</td><td>SH600918</td><td class='sell'>SELL</td><td>5,377</td><td>¥2.23</td><td>¥11,999</td></tr>
+<tr><td>2025-01-23</td><td>SZ300413</td><td class='sell'>SELL</td><td>1,484</td><td>¥8.24</td><td>¥12,232</td></tr>
+<tr><td>2025-01-24</td><td>SZ300782</td><td class='buy'>BUY</td><td>1,740</td><td>¥6.82</td><td>¥11,867</td></tr>
+<tr><td>2025-01-24</td><td>SZ300450</td><td class='sell'>SELL</td><td>628</td><td>¥18.76</td><td>¥11,787</td></tr>
+<tr><td>2025-01-24</td><td>SZ300832</td><td class='buy'>BUY</td><td>3,449</td><td>¥3.56</td><td>¥12,273</td></tr>
+<tr><td>2025-01-24</td><td>SZ300502</td><td class='sell'>SELL</td><td>4,103</td><td>¥3.20</td><td>¥13,141</td></tr>
+<tr><td>2025-01-24</td><td>SZ002007</td><td class='buy'>BUY</td><td>74</td><td>¥166.56</td><td>¥12,288</td></tr>
+<tr><td>2025-01-27</td><td>SH600809</td><td class='buy'>BUY</td><td>210</td><td>¥59.38</td><td>¥12,467</td></tr>
+<tr><td>2025-01-27</td><td>SZ002938</td><td class='sell'>SELL</td><td>5,745</td><td>¥2.17</td><td>¥12,461</td></tr>
+<tr><td>2025-01-27</td><td>SZ300661</td><td class='buy'>BUY</td><td>1,186</td><td>¥10.73</td><td>¥12,727</td></tr>
+<tr><td>2025-01-27</td><td>SZ002241</td><td class='sell'>SELL</td><td>550</td><td>¥22.91</td><td>¥12,605</td></tr>
+<tr><td>2025-02-05</td><td>SH603659</td><td class='buy'>BUY</td><td>2,936</td><td>¥4.29</td><td>¥12,590</td></tr>
+<tr><td>2025-02-05</td><td>SH600600</td><td class='sell'>SELL</td><td>1,088</td><td>¥11.71</td><td>¥12,739</td></tr>
+<tr><td>2025-02-05</td><td>SZ002938</td><td class='buy'>BUY</td><td>5,882</td><td>¥2.30</td><td>¥13,525</td></tr>
+<tr><td>2025-02-05</td><td>SZ002007</td><td class='sell'>SELL</td><td>74</td><td>¥169.10</td><td>¥12,475</td></tr>
+<tr><td>2025-02-06</td><td>SH600809</td><td class='sell'>SELL</td><td>210</td><td>¥60.56</td><td>¥12,715</td></tr>
+<tr><td>2025-02-06</td><td>SZ300014</td><td class='buy'>BUY</td><td>2,597</td><td>¥4.95</td><td>¥12,859</td></tr>
+<tr><td>2025-02-06</td><td>SH600918</td><td class='buy'>BUY</td><td>5,672</td><td>¥2.19</td><td>¥12,415</td></tr>
+<tr><td>2025-02-06</td><td>SZ300661</td><td class='sell'>SELL</td><td>1,186</td><td>¥11.29</td><td>¥13,387</td></tr>
+<tr><td>2025-02-07</td><td>SH603659</td><td class='sell'>SELL</td><td>2,936</td><td>¥4.32</td><td>¥12,699</td></tr>
+<tr><td>2025-02-07</td><td>SZ300014</td><td class='sell'>SELL</td><td>2,597</td><td>¥4.95</td><td>¥12,859</td></tr>
+<tr><td>2025-02-07</td><td>SH600584</td><td class='buy'>BUY</td><td>1,546</td><td>¥8.35</td><td>¥12,906</td></tr>
+<tr><td>2025-02-07</td><td>SH601788</td><td class='buy'>BUY</td><td>19,167</td><td>¥0.64</td><td>¥12,336</td></tr>
+<tr><td>2025-02-10</td><td>SZ300782</td><td class='sell'>SELL</td><td>1,740</td><td>¥7.51</td><td>¥13,064</td></tr>
+<tr><td>2025-02-10</td><td>SH600233</td><td class='buy'>BUY</td><td>1,693</td><td>¥5.28</td><td>¥8,944</td></tr>
+<tr><td>2025-02-10</td><td>SH603392</td><td class='buy'>BUY</td><td>670</td><td>¥13.10</td><td>¥8,770</td></tr>
+<tr><td>2025-02-11</td><td>SH601100</td><td class='sell'>SELL</td><td>1,615</td><td>¥5.24</td><td>¥8,467</td></tr>
+<tr><td>2025-02-11</td><td>SH601788</td><td class='sell'>SELL</td><td>19,167</td><td>¥0.71</td><td>¥13,569</td></tr>
+<tr><td>2025-02-11</td><td>SZ300502</td><td class='buy'>BUY</td><td>4,354</td><td>¥3.43</td><td>¥14,918</td></tr>
+<tr><td>2025-02-12</td><td>SH603392</td><td class='sell'>SELL</td><td>670</td><td>¥13.42</td><td>¥8,986</td></tr>
+<tr><td>2025-02-12</td><td>SZ000166</td><td class='buy'>BUY</td><td>3,648</td><td>¥2.41</td><td>¥8,793</td></tr>
+<tr><td>2025-02-12</td><td>SZ002007</td><td class='buy'>BUY</td><td>50</td><td>¥164.64</td><td>¥8,228</td></tr>
+<tr><td>2025-02-13</td><td>SH601100</td><td class='buy'>BUY</td><td>911</td><td>¥4.99</td><td>¥4,547</td></tr>
+<tr><td>2025-02-17</td><td>SZ300832</td><td class='sell'>SELL</td><td>3,449</td><td>¥3.55</td><td>¥12,229</td></tr>
+<tr><td>2025-02-18</td><td>SH601601</td><td class='buy'>BUY</td><td>14,528</td><td>¥0.93</td><td>¥13,570</td></tr>
+<tr><td>2025-02-18</td><td>SZ000166</td><td class='sell'>SELL</td><td>3,648</td><td>¥2.84</td><td>¥10,375</td></tr>
+<tr><td>2025-02-19</td><td>SH600584</td><td class='sell'>SELL</td><td>1,546</td><td>¥11.30</td><td>¥17,468</td></tr>
+<tr><td>2025-02-19</td><td>SH600918</td><td class='sell'>SELL</td><td>5,672</td><td>¥3.29</td><td>¥18,689</td></tr>
+<tr><td>2025-02-19</td><td>SH600036</td><td class='buy'>BUY</td><td>1,540</td><td>¥14.98</td><td>¥23,070</td></tr>
+<tr><td>2025-02-20</td><td>SZ000725</td><td class='buy'>BUY</td><td>15,851</td><td>¥1.13</td><td>¥17,966</td></tr>
+<tr><td>2025-02-20</td><td>SZ000661</td><td class='buy'>BUY</td><td>318</td><td>¥58.50</td><td>¥18,625</td></tr>
+<tr><td>2025-02-20</td><td>SH601689</td><td class='sell'>SELL</td><td>4,869</td><td>¥3.31</td><td>¥16,135</td></tr>
+<tr><td>2025-02-20</td><td>SZ300502</td><td class='sell'>SELL</td><td>4,354</td><td>¥3.78</td><td>¥16,466</td></tr>
+<tr><td>2025-02-21</td><td>SZ002920</td><td class='sell'>SELL</td><td>6,415</td><td>¥2.57</td><td>¥16,496</td></tr>
+<tr><td>2025-02-21</td><td>SZ002304</td><td class='buy'>BUY</td><td>2,426</td><td>¥6.95</td><td>¥16,856</td></tr>
+<tr><td>2025-02-21</td><td>SH601601</td><td class='sell'>SELL</td><td>14,528</td><td>¥0.88</td><td>¥12,738</td></tr>
+<tr><td>2025-02-21</td><td>SZ300832</td><td class='buy'>BUY</td><td>3,910</td><td>¥4.34</td><td>¥16,963</td></tr>
+<tr><td>2025-02-24</td><td>SH601888</td><td class='buy'>BUY</td><td>655</td><td>¥25.40</td><td>¥16,639</td></tr>
+<tr><td>2025-02-24</td><td>SZ002304</td><td class='sell'>SELL</td><td>2,426</td><td>¥6.95</td><td>¥16,856</td></tr>
+<tr><td>2025-02-24</td><td>SZ300832</td><td class='sell'>SELL</td><td>3,910</td><td>¥4.34</td><td>¥16,963</td></tr>
+<tr><td>2025-02-25</td><td>SZ000725</td><td class='sell'>SELL</td><td>15,851</td><td>¥1.16</td><td>¥18,320</td></tr>
+<tr><td>2025-02-25</td><td>SH601788</td><td class='buy'>BUY</td><td>11,623</td><td>¥1.25</td><td>¥14,561</td></tr>
+<tr><td>2025-02-25</td><td>SZ002466</td><td class='buy'>BUY</td><td>5,285</td><td>¥2.76</td><td>¥14,565</td></tr>
+<tr><td>2025-02-25</td><td>SZ002007</td><td class='sell'>SELL</td><td>50</td><td>¥193.28</td><td>¥9,660</td></tr>
+<tr><td>2025-02-26</td><td>SH600036</td><td class='sell'>SELL</td><td>1,540</td><td>¥13.87</td><td>¥21,372</td></tr>
+<tr><td>2025-02-26</td><td>SZ002938</td><td class='sell'>SELL</td><td>5,882</td><td>¥2.22</td><td>¥13,087</td></tr>
+<tr><td>2025-02-27</td><td>SH603659</td><td class='buy'>BUY</td><td>3,022</td><td>¥4.55</td><td>¥13,746</td></tr>
+<tr><td>2025-02-27</td><td>SZ002938</td><td class='buy'>BUY</td><td>6,553</td><td>¥2.11</td><td>¥13,796</td></tr>
+<tr><td>2025-02-27</td><td>SZ000661</td><td class='sell'>SELL</td><td>318</td><td>¥60.50</td><td>¥19,262</td></tr>
+<tr><td>2025-02-27</td><td>SH603986</td><td class='buy'>BUY</td><td>678</td><td>¥19.74</td><td>¥13,383</td></tr>
+<tr><td>2025-02-28</td><td>SH601888</td><td class='sell'>SELL</td><td>655</td><td>¥25.24</td><td>¥16,535</td></tr>
+<tr><td>2025-02-28</td><td>SH601788</td><td class='sell'>SELL</td><td>11,623</td><td>¥1.10</td><td>¥12,732</td></tr>
+<tr><td>2025-02-28</td><td>SH600999</td><td class='buy'>BUY</td><td>17,146</td><td>¥1.11</td><td>¥19,035</td></tr>
+<tr><td>2025-02-28</td><td>SZ300759</td><td class='buy'>BUY</td><td>1,749</td><td>¥9.72</td><td>¥17,006</td></tr>
+<tr><td>2025-03-03</td><td>SZ002938</td><td class='sell'>SELL</td><td>6,553</td><td>¥2.14</td><td>¥14,036</td></tr>
+<tr><td>2025-03-03</td><td>SZ002241</td><td class='buy'>BUY</td><td>623</td><td>¥27.91</td><td>¥17,384</td></tr>
+<tr><td>2025-03-03</td><td>SH600999</td><td class='sell'>SELL</td><td>17,146</td><td>¥1.11</td><td>¥19,035</td></tr>
+<tr><td>2025-03-03</td><td>SZ300502</td><td class='buy'>BUY</td><td>4,302</td><td>¥3.99</td><td>¥17,178</td></tr>
+<tr><td>2025-03-04</td><td>SH603659</td><td class='sell'>SELL</td><td>3,022</td><td>¥4.59</td><td>¥13,866</td></tr>
+<tr><td>2025-03-04</td><td>SZ002129</td><td class='buy'>BUY</td><td>2,513</td><td>¥6.17</td><td>¥15,501</td></tr>
+<tr><td>2025-03-04</td><td>SZ002049</td><td class='buy'>BUY</td><td>179</td><td>¥87.62</td><td>¥15,662</td></tr>
+<tr><td>2025-03-04</td><td>SH603986</td><td class='sell'>SELL</td><td>678</td><td>¥20.45</td><td>¥13,866</td></tr>
+<tr><td>2025-03-05</td><td>SZ300661</td><td class='buy'>BUY</td><td>929</td><td>¥15.17</td><td>¥14,098</td></tr>
+<tr><td>2025-03-05</td><td>SZ002241</td><td class='sell'>SELL</td><td>623</td><td>¥29.07</td><td>¥18,109</td></tr>
+<tr><td>2025-03-05</td><td>SH601100</td><td class='sell'>SELL</td><td>911</td><td>¥5.97</td><td>¥5,440</td></tr>
+<tr><td>2025-03-05</td><td>SH600803</td><td class='buy'>BUY</td><td>3,696</td><td>¥3.73</td><td>¥13,774</td></tr>
+<tr><td>2025-03-06</td><td>SH603392</td><td class='buy'>BUY</td><td>712</td><td>¥16.67</td><td>¥11,865</td></tr>
+<tr><td>2025-03-06</td><td>SH600233</td><td class='sell'>SELL</td><td>1,693</td><td>¥5.78</td><td>¥9,786</td></tr>
+<tr><td>2025-03-06</td><td>SH600803</td><td class='sell'>SELL</td><td>3,696</td><td>¥3.73</td><td>¥13,774</td></tr>
+<tr><td>2025-03-07</td><td>SZ002049</td><td class='sell'>SELL</td><td>179</td><td>¥82.43</td><td>¥14,735</td></tr>
+<tr><td>2025-03-07</td><td>SH600760</td><td class='buy'>BUY</td><td>1,409</td><td>¥9.46</td><td>¥13,333</td></tr>
+<tr><td>2025-03-07</td><td>SH600460</td><td class='buy'>BUY</td><td>984</td><td>¥13.60</td><td>¥13,390</td></tr>
+<tr><td>2025-03-07</td><td>SH600918</td><td class='buy'>BUY</td><td>4,999</td><td>¥2.59</td><td>¥12,945</td></tr>
+<tr><td>2025-03-07</td><td>SZ300661</td><td class='sell'>SELL</td><td>929</td><td>¥13.67</td><td>¥12,697</td></tr>
+<tr><td>2025-03-07</td><td>SZ002241</td><td class='buy'>BUY</td><td>457</td><td>¥29.28</td><td>¥13,370</td></tr>
+<tr><td>2025-03-10</td><td>SH600460</td><td class='sell'>SELL</td><td>984</td><td>¥13.60</td><td>¥13,390</td></tr>
+<tr><td>2025-03-10</td><td>SH600760</td><td class='sell'>SELL</td><td>1,409</td><td>¥9.46</td><td>¥13,333</td></tr>
+<tr><td>2025-03-10</td><td>SZ002459</td><td class='buy'>BUY</td><td>15,882</td><td>¥0.80</td><td>¥12,715</td></tr>
+<tr><td>2025-03-11</td><td>SH600809</td><td class='buy'>BUY</td><td>175</td><td>¥76.08</td><td>¥13,352</td></tr>
+<tr><td>2025-03-11</td><td>SZ002129</td><td class='sell'>SELL</td><td>2,513</td><td>¥5.69</td><td>¥14,302</td></tr>
+<tr><td>2025-03-11</td><td>SH600918</td><td class='sell'>SELL</td><td>4,999</td><td>¥2.65</td><td>¥13,246</td></tr>
+<tr><td>2025-03-11</td><td>SZ002180</td><td class='buy'>BUY</td><td>2,550</td><td>¥5.19</td><td>¥13,242</td></tr>
+<tr><td>2025-03-12</td><td>SZ002241</td><td class='sell'>SELL</td><td>457</td><td>¥34.14</td><td>¥15,589</td></tr>
+<tr><td>2025-03-12</td><td>SZ002466</td><td class='sell'>SELL</td><td>5,285</td><td>¥2.53</td><td>¥13,381</td></tr>
+<tr><td>2025-03-12</td><td>SZ300760</td><td class='buy'>BUY</td><td>2,815</td><td>¥4.87</td><td>¥13,716</td></tr>
+<tr><td>2025-03-12</td><td>SH601689</td><td class='buy'>BUY</td><td>4,301</td><td>¥3.19</td><td>¥13,731</td></tr>
+<tr><td>2025-03-12</td><td>SZ000807</td><td class='buy'>BUY</td><td>872</td><td>¥16.19</td><td>¥14,109</td></tr>
+<tr><td>2025-03-13</td><td>SH603392</td><td class='sell'>SELL</td><td>712</td><td>¥19.29</td><td>¥13,735</td></tr>
+<tr><td>2025-03-13</td><td>SZ300760</td><td class='sell'>SELL</td><td>2,815</td><td>¥4.87</td><td>¥13,716</td></tr>
+<tr><td>2025-03-13</td><td>SH600760</td><td class='buy'>BUY</td><td>1,521</td><td>¥9.18</td><td>¥13,958</td></tr>
+<tr><td>2025-03-13</td><td>SH600161</td><td class='buy'>BUY</td><td>545</td><td>¥26.76</td><td>¥14,576</td></tr>
+<tr><td>2025-03-14</td><td>SH601788</td><td class='buy'>BUY</td><td>13,053</td><td>¥1.07</td><td>¥13,984</td></tr>
+<tr><td>2025-03-14</td><td>SZ000661</td><td class='buy'>BUY</td><td>215</td><td>¥63.78</td><td>¥13,743</td></tr>
+<tr><td>2025-03-14</td><td>SH600760</td><td class='sell'>SELL</td><td>1,521</td><td>¥9.18</td><td>¥13,958</td></tr>
+<tr><td>2025-03-14</td><td>SZ002180</td><td class='sell'>SELL</td><td>2,550</td><td>¥5.41</td><td>¥13,800</td></tr>
+<tr><td>2025-03-17</td><td>SZ300394</td><td class='buy'>BUY</td><td>2,255</td><td>¥6.50</td><td>¥14,652</td></tr>
+<tr><td>2025-03-17</td><td>SH600161</td><td class='sell'>SELL</td><td>545</td><td>¥27.03</td><td>¥14,720</td></tr>
+<tr><td>2025-03-17</td><td>SH601633</td><td class='buy'>BUY</td><td>2,397</td><td>¥5.81</td><td>¥13,930</td></tr>
+<tr><td>2025-03-17</td><td>SZ002459</td><td class='sell'>SELL</td><td>15,882</td><td>¥0.84</td><td>¥13,355</td></tr>
+<tr><td>2025-03-18</td><td>SZ300124</td><td class='buy'>BUY</td><td>1,250</td><td>¥11.14</td><td>¥13,923</td></tr>
+<tr><td>2025-03-18</td><td>SZ300832</td><td class='buy'>BUY</td><td>3,826</td><td>¥3.64</td><td>¥13,919</td></tr>
+<tr><td>2025-03-18</td><td>SH601788</td><td class='sell'>SELL</td><td>13,053</td><td>¥1.07</td><td>¥13,904</td></tr>
+<tr><td>2025-03-18</td><td>SH601633</td><td class='sell'>SELL</td><td>2,397</td><td>¥5.81</td><td>¥13,930</td></tr>
+<tr><td>2025-03-19</td><td>SZ300124</td><td class='sell'>SELL</td><td>1,250</td><td>¥11.14</td><td>¥13,923</td></tr>
+<tr><td>2025-03-19</td><td>SZ300408</td><td class='buy'>BUY</td><td>5,343</td><td>¥2.83</td><td>¥15,105</td></tr>
+<tr><td>2025-03-19</td><td>SZ002241</td><td class='buy'>BUY</td><td>436</td><td>¥34.70</td><td>¥15,117</td></tr>
+<tr><td>2025-03-19</td><td>SZ300502</td><td class='sell'>SELL</td><td>4,302</td><td>¥4.29</td><td>¥18,446</td></tr>
+<tr><td>2025-03-20</td><td>SZ300832</td><td class='sell'>SELL</td><td>3,826</td><td>¥3.56</td><td>¥13,635</td></tr>
+<tr><td>2025-03-20</td><td>SZ300759</td><td class='sell'>SELL</td><td>1,749</td><td>¥9.61</td><td>¥16,807</td></tr>
+<tr><td>2025-03-20</td><td>SZ002812</td><td class='buy'>BUY</td><td>1,769</td><td>¥8.64</td><td>¥15,279</td></tr>
+<tr><td>2025-03-20</td><td>SZ002007</td><td class='buy'>BUY</td><td>66</td><td>¥215.93</td><td>¥14,240</td></tr>
+<tr><td>2025-03-21</td><td>SH603806</td><td class='buy'>BUY</td><td>5,665</td><td>¥2.67</td><td>¥15,150</td></tr>
+<tr><td>2025-03-21</td><td>SH600809</td><td class='sell'>SELL</td><td>175</td><td>¥73.13</td><td>¥12,833</td></tr>
+<tr><td>2025-03-21</td><td>SZ300502</td><td class='buy'>BUY</td><td>3,509</td><td>¥3.92</td><td>¥13,751</td></tr>
+<tr><td>2025-03-21</td><td>SZ002007</td><td class='sell'>SELL</td><td>66</td><td>¥215.93</td><td>¥14,240</td></tr>
+<tr><td>2025-03-24</td><td>SH601628</td><td class='buy'>BUY</td><td>10,940</td><td>¥1.25</td><td>¥13,624</td></tr>
+<tr><td>2025-03-24</td><td>SZ002241</td><td class='sell'>SELL</td><td>436</td><td>¥32.74</td><td>¥14,265</td></tr>
+<tr><td>2025-03-24</td><td>SH601788</td><td class='buy'>BUY</td><td>14,156</td><td>¥0.98</td><td>¥13,936</td></tr>
+<tr><td>2025-03-24</td><td>SZ000807</td><td class='sell'>SELL</td><td>872</td><td>¥14.78</td><td>¥12,881</td></tr>
+<tr><td>2025-03-25</td><td>SH603806</td><td class='sell'>SELL</td><td>5,665</td><td>¥2.67</td><td>¥15,131</td></tr>
+<tr><td>2025-03-25</td><td>SZ002601</td><td class='buy'>BUY</td><td>6,237</td><td>¥2.20</td><td>¥13,751</td></tr>
+<tr><td>2025-03-25</td><td>SZ300502</td><td class='sell'>SELL</td><td>3,509</td><td>¥3.85</td><td>¥13,507</td></tr>
+<tr><td>2025-03-26</td><td>SH600918</td><td class='buy'>BUY</td><td>5,342</td><td>¥2.60</td><td>¥13,894</td></tr>
+<tr><td>2025-03-26</td><td>SZ300394</td><td class='sell'>SELL</td><td>2,255</td><td>¥5.84</td><td>¥13,159</td></tr>
+<tr><td>2025-03-26</td><td>SH601066</td><td class='buy'>BUY</td><td>2,813</td><td>¥4.83</td><td>¥13,577</td></tr>
+<tr><td>2025-03-26</td><td>SZ002812</td><td class='sell'>SELL</td><td>1,769</td><td>¥8.14</td><td>¥14,401</td></tr>
+<tr><td>2025-03-26</td><td>SH600415</td><td class='buy'>BUY</td><td>72</td><td>¥190.39</td><td>¥13,722</td></tr>
+<tr><td>2025-03-27</td><td>SH600584</td><td class='buy'>BUY</td><td>1,197</td><td>¥12.35</td><td>¥14,771</td></tr>
+<tr><td>2025-03-27</td><td>SH600918</td><td class='sell'>SELL</td><td>5,342</td><td>¥2.60</td><td>¥13,894</td></tr>
+<tr><td>2025-03-27</td><td>SZ300408</td><td class='sell'>SELL</td><td>5,343</td><td>¥2.78</td><td>¥14,866</td></tr>
+<tr><td>2025-03-27</td><td>SH603392</td><td class='buy'>BUY</td><td>845</td><td>¥16.51</td><td>¥13,954</td></tr>
+<tr><td>2025-03-28</td><td>SZ000596</td><td class='buy'>BUY</td><td>304</td><td>¥51.60</td><td>¥15,680</td></tr>
+<tr><td>2025-03-28</td><td>SZ000768</td><td class='buy'>BUY</td><td>1,690</td><td>¥9.48</td><td>¥16,017</td></tr>
+<tr><td>2025-03-28</td><td>SH601689</td><td class='sell'>SELL</td><td>4,301</td><td>¥4.24</td><td>¥18,239</td></tr>
+<tr><td>2025-03-28</td><td>SH600415</td><td class='sell'>SELL</td><td>72</td><td>¥192.50</td><td>¥13,874</td></tr>
+<tr><td>2025-03-31</td><td>SH600584</td><td class='sell'>SELL</td><td>1,197</td><td>¥12.79</td><td>¥15,307</td></tr>
+<tr><td>2025-03-31</td><td>SH601788</td><td class='sell'>SELL</td><td>14,156</td><td>¥1.04</td><td>¥14,704</td></tr>
+<tr><td>2025-03-31</td><td>SZ300394</td><td class='buy'>BUY</td><td>2,586</td><td>¥5.53</td><td>¥14,300</td></tr>
+<tr><td>2025-03-31</td><td>SH600893</td><td class='buy'>BUY</td><td>962</td><td>¥16.08</td><td>¥15,474</td></tr>
+<tr><td>2025-04-01</td><td>SZ000786</td><td class='buy'>BUY</td><td>645</td><td>¥22.84</td><td>¥14,734</td></tr>
+<tr><td>2025-04-01</td><td>SH603392</td><td class='sell'>SELL</td><td>845</td><td>¥17.35</td><td>¥14,663</td></tr>
+<tr><td>2025-04-01</td><td>SZ300394</td><td class='sell'>SELL</td><td>2,586</td><td>¥5.53</td><td>¥14,300</td></tr>
+<tr><td>2025-04-01</td><td>SZ002241</td><td class='buy'>BUY</td><td>434</td><td>¥32.60</td><td>¥14,135</td></tr>
+<tr><td>2025-04-02</td><td>SH601628</td><td class='sell'>SELL</td><td>10,940</td><td>¥1.44</td><td>¥15,767</td></tr>
+<tr><td>2025-04-02</td><td>SH603392</td><td class='buy'>BUY</td><td>923</td><td>¥16.63</td><td>¥15,341</td></tr>
+<tr><td>2025-04-02</td><td>SZ300122</td><td class='buy'>BUY</td><td>947</td><td>¥16.11</td><td>¥15,257</td></tr>
+<tr><td>2025-04-02</td><td>SH600893</td><td class='sell'>SELL</td><td>962</td><td>¥14.96</td><td>¥14,392</td></tr>
+<tr><td>2025-04-03</td><td>SH601888</td><td class='buy'>BUY</td><td>517</td><td>¥26.75</td><td>¥13,824</td></tr>
+<tr><td>2025-04-03</td><td>SH601628</td><td class='buy'>BUY</td><td>9,797</td><td>¥1.41</td><td>¥13,793</td></tr>
+<tr><td>2025-04-03</td><td>SH601066</td><td class='sell'>SELL</td><td>2,813</td><td>¥4.66</td><td>¥13,109</td></tr>
+<tr><td>2025-04-03</td><td>SZ000661</td><td class='sell'>SELL</td><td>215</td><td>¥57.71</td><td>¥12,435</td></tr>
+<tr><td>2025-04-07</td><td>SH603806</td><td class='buy'>BUY</td><td>5,840</td><td>¥2.47</td><td>¥14,445</td></tr>
+<tr><td>2025-04-07</td><td>SH601888</td><td class='sell'>SELL</td><td>517</td><td>¥26.75</td><td>¥13,824</td></tr>
+<tr><td>2025-04-07</td><td>SH603392</td><td class='sell'>SELL</td><td>923</td><td>¥16.79</td><td>¥15,491</td></tr>
+<tr><td>2025-04-07</td><td>SZ002459</td><td class='buy'>BUY</td><td>17,132</td><td>¥0.85</td><td>¥14,605</td></tr>
+<tr><td>2025-04-08</td><td>SH603806</td><td class='sell'>SELL</td><td>5,840</td><td>¥2.47</td><td>¥14,445</td></tr>
+<tr><td>2025-04-08</td><td>SZ002027</td><td class='buy'>BUY</td><td>2,005</td><td>¥7.45</td><td>¥14,947</td></tr>
+<tr><td>2025-04-08</td><td>SZ002241</td><td class='sell'>SELL</td><td>434</td><td>¥37.26</td><td>¥16,156</td></tr>
+<tr><td>2025-04-08</td><td>SH603392</td><td class='buy'>BUY</td><td>917</td><td>¥16.28</td><td>¥14,925</td></tr>
+<tr><td>2025-04-09</td><td>SZ000596</td><td class='sell'>SELL</td><td>304</td><td>¥56.74</td><td>¥17,241</td></tr>
+<tr><td>2025-04-09</td><td>SH600760</td><td class='buy'>BUY</td><td>1,841</td><td>¥8.23</td><td>¥15,146</td></tr>
+<tr><td>2025-04-09</td><td>SZ000768</td><td class='sell'>SELL</td><td>1,690</td><td>¥8.54</td><td>¥14,431</td></tr>
+<tr><td>2025-04-09</td><td>SZ300433</td><td class='buy'>BUY</td><td>2,491</td><td>¥5.84</td><td>¥14,535</td></tr>
+<tr><td>2025-04-10</td><td>SZ002601</td><td class='sell'>SELL</td><td>6,237</td><td>¥2.25</td><td>¥14,058</td></tr>
+<tr><td>2025-04-10</td><td>SH601628</td><td class='sell'>SELL</td><td>9,797</td><td>¥1.36</td><td>¥13,284</td></tr>
+<tr><td>2025-04-10</td><td>SZ002049</td><td class='buy'>BUY</td><td>167</td><td>¥89.23</td><td>¥14,875</td></tr>
+<tr><td>2025-04-10</td><td>SH601788</td><td class='buy'>BUY</td><td>14,808</td><td>¥0.98</td><td>¥14,499</td></tr>
+<tr><td>2025-04-11</td><td>SH600176</td><td class='buy'>BUY</td><td>291</td><td>¥51.47</td><td>¥14,972</td></tr>
+<tr><td>2025-04-11</td><td>SZ002027</td><td class='sell'>SELL</td><td>2,005</td><td>¥7.22</td><td>¥14,481</td></tr>
+<tr><td>2025-04-11</td><td>SZ300122</td><td class='sell'>SELL</td><td>947</td><td>¥16.18</td><td>¥15,329</td></tr>
+<tr><td>2025-04-11</td><td>SH601066</td><td class='buy'>BUY</td><td>3,274</td><td>¥4.69</td><td>¥15,345</td></tr>
+<tr><td>2025-04-14</td><td>SH601888</td><td class='buy'>BUY</td><td>513</td><td>¥27.91</td><td>¥14,318</td></tr>
+<tr><td>2025-04-14</td><td>SH600176</td><td class='sell'>SELL</td><td>291</td><td>¥51.47</td><td>¥14,972</td></tr>
+<tr><td>2025-04-14</td><td>SH603392</td><td class='sell'>SELL</td><td>917</td><td>¥17.31</td><td>¥15,876</td></tr>
+<tr><td>2025-04-14</td><td>SH600887</td><td class='buy'>BUY</td><td>131</td><td>¥117.56</td><td>¥15,374</td></tr>
+<tr><td>2025-04-15</td><td>SH601899</td><td class='buy'>BUY</td><td>14,559</td><td>¥1.06</td><td>¥15,495</td></tr>
+<tr><td>2025-04-15</td><td>SZ002049</td><td class='sell'>SELL</td><td>167</td><td>¥89.21</td><td>¥14,873</td></tr>
+<tr><td>2025-04-15</td><td>SH600760</td><td class='sell'>SELL</td><td>1,841</td><td>¥8.47</td><td>¥15,598</td></tr>
+<tr><td>2025-04-15</td><td>SZ000408</td><td class='buy'>BUY</td><td>6,535</td><td>¥2.31</td><td>¥15,106</td></tr>
+<tr><td>2025-04-16</td><td>SZ000786</td><td class='sell'>SELL</td><td>645</td><td>¥22.31</td><td>¥14,396</td></tr>
+<tr><td>2025-04-16</td><td>SZ000408</td><td class='sell'>SELL</td><td>6,535</td><td>¥2.31</td><td>¥15,106</td></tr>
+<tr><td>2025-04-16</td><td>SZ300122</td><td class='buy'>BUY</td><td>954</td><td>¥15.61</td><td>¥14,899</td></tr>
+<tr><td>2025-04-16</td><td>SH601633</td><td class='buy'>BUY</td><td>2,243</td><td>¥6.64</td><td>¥14,888</td></tr>
+<tr><td>2025-04-17</td><td>SH601899</td><td class='sell'>SELL</td><td>14,559</td><td>¥1.03</td><td>¥15,051</td></tr>
+<tr><td>2025-04-17</td><td>SH600584</td><td class='buy'>BUY</td><td>1,462</td><td>¥10.26</td><td>¥15,004</td></tr>
+<tr><td>2025-04-17</td><td>SH600887</td><td class='sell'>SELL</td><td>131</td><td>¥116.61</td><td>¥15,249</td></tr>
+<tr><td>2025-04-17</td><td>SH600760</td><td class='buy'>BUY</td><td>1,837</td><td>¥8.17</td><td>¥15,000</td></tr>
+<tr><td>2025-04-18</td><td>SH600438</td><td class='buy'>BUY</td><td>535</td><td>¥27.99</td><td>¥14,984</td></tr>
+<tr><td>2025-04-18</td><td>SZ300122</td><td class='sell'>SELL</td><td>954</td><td>¥15.63</td><td>¥14,917</td></tr>
+<tr><td>2025-04-18</td><td>SH603392</td><td class='buy'>BUY</td><td>900</td><td>¥16.97</td><td>¥15,270</td></tr>
+<tr><td>2025-04-18</td><td>SZ002459</td><td class='sell'>SELL</td><td>17,132</td><td>¥0.92</td><td>¥15,717</td></tr>
+<tr><td>2025-04-21</td><td>SH600584</td><td class='sell'>SELL</td><td>1,462</td><td>¥10.37</td><td>¥15,162</td></tr>
+<tr><td>2025-04-21</td><td>SH601788</td><td class='sell'>SELL</td><td>14,808</td><td>¥1.07</td><td>¥15,787</td></tr>
+<tr><td>2025-04-21</td><td>SZ000596</td><td class='buy'>BUY</td><td>271</td><td>¥54.06</td><td>¥14,649</td></tr>
+<tr><td>2025-04-21</td><td>SZ300122</td><td class='buy'>BUY</td><td>933</td><td>¥15.70</td><td>¥14,646</td></tr>
+<tr><td>2025-04-22</td><td>SZ000786</td><td class='buy'>BUY</td><td>643</td><td>¥24.02</td><td>¥15,437</td></tr>
+<tr><td>2025-04-22</td><td>SH600584</td><td class='buy'>BUY</td><td>1,470</td><td>¥9.60</td><td>¥14,114</td></tr>
+<tr><td>2025-04-22</td><td>SH601066</td><td class='sell'>SELL</td><td>3,274</td><td>¥4.25</td><td>¥13,916</td></tr>
+<tr><td>2025-04-22</td><td>SZ300122</td><td class='sell'>SELL</td><td>933</td><td>¥15.70</td><td>¥14,646</td></tr>
+<tr><td>2025-04-23</td><td>SZ002049</td><td class='buy'>BUY</td><td>126</td><td>¥78.31</td><td>¥9,837</td></tr>
+<tr><td>2025-04-23</td><td>SZ300433</td><td class='sell'>SELL</td><td>2,491</td><td>¥5.84</td><td>¥14,535</td></tr>
+<tr><td>2025-04-23</td><td>SH600196</td><td class='buy'>BUY</td><td>342</td><td>¥27.84</td><td>¥9,518</td></tr>
+<tr><td>2025-04-24</td><td>SZ300122</td><td class='buy'>BUY</td><td>1,318</td><td>¥14.35</td><td>¥18,913</td></tr>
+<tr><td>2025-04-24</td><td>SH601888</td><td class='sell'>SELL</td><td>513</td><td>¥26.46</td><td>¥13,573</td></tr>
+<tr><td>2025-04-24</td><td>SZ000596</td><td class='sell'>SELL</td><td>271</td><td>¥51.41</td><td>¥13,931</td></tr>
+<tr><td>2025-04-25</td><td>SH601628</td><td class='buy'>BUY</td><td>8,294</td><td>¥1.40</td><td>¥11,646</td></tr>
+<tr><td>2025-04-25</td><td>SH601633</td><td class='sell'>SELL</td><td>2,243</td><td>¥7.09</td><td>¥15,905</td></tr>
+<tr><td>2025-04-25</td><td>SZ002371</td><td class='buy'>BUY</td><td>911</td><td>¥12.72</td><td>¥11,583</td></tr>
+<tr><td>2025-04-28</td><td>SH600584</td><td class='sell'>SELL</td><td>1,470</td><td>¥9.81</td><td>¥14,426</td></tr>
+<tr><td>2025-04-28</td><td>SZ002371</td><td class='sell'>SELL</td><td>911</td><td>¥12.72</td><td>¥11,583</td></tr>
+<tr><td>2025-04-29</td><td>SH601899</td><td class='buy'>BUY</td><td>14,403</td><td>¥1.04</td><td>¥14,973</td></tr>
+<tr><td>2025-04-29</td><td>SZ002049</td><td class='sell'>SELL</td><td>126</td><td>¥79.12</td><td>¥9,938</td></tr>
+<tr><td>2025-04-29</td><td>SH600760</td><td class='sell'>SELL</td><td>1,837</td><td>¥7.63</td><td>¥14,006</td></tr>
+<tr><td>2025-04-29</td><td>SZ300418</td><td class='buy'>BUY</td><td>3,576</td><td>¥3.97</td><td>¥14,188</td></tr>
+<tr><td>2025-04-29</td><td>SH601865</td><td class='buy'>BUY</td><td>9,527</td><td>¥1.54</td><td>¥14,693</td></tr>
+<tr><td>2025-04-30</td><td>SH603392</td><td class='sell'>SELL</td><td>900</td><td>¥14.54</td><td>¥13,080</td></tr>
+<tr><td>2025-04-30</td><td>SZ002493</td><td class='buy'>BUY</td><td>3,439</td><td>¥4.23</td><td>¥14,543</td></tr>
+<tr><td>2025-04-30</td><td>SZ002594</td><td class='buy'>BUY</td><td>3,640</td><td>¥4.22</td><td>¥15,359</td></tr>
+<tr><td>2025-04-30</td><td>SH601865</td><td class='sell'>SELL</td><td>9,527</td><td>¥1.54</td><td>¥14,693</td></tr>
+<tr><td>2025-05-06</td><td>SZ300122</td><td class='sell'>SELL</td><td>1,318</td><td>¥14.78</td><td>¥19,473</td></tr>
+<tr><td>2025-05-06</td><td>SH601865</td><td class='buy'>BUY</td><td>7,043</td><td>¥1.68</td><td>¥11,846</td></tr>
+<tr><td>2025-05-06</td><td>SH603659</td><td class='buy'>BUY</td><td>2,492</td><td>¥4.70</td><td>¥11,718</td></tr>
+<tr><td>2025-05-07</td><td>SZ300418</td><td class='sell'>SELL</td><td>3,576</td><td>¥3.89</td><td>¥13,919</td></tr>
+<tr><td>2025-05-07</td><td>SZ002594</td><td class='sell'>SELL</td><td>3,640</td><td>¥4.65</td><td>¥16,912</td></tr>
+<tr><td>2025-05-07</td><td>SH600893</td><td class='buy'>BUY</td><td>1,628</td><td>¥12.98</td><td>¥21,132</td></tr>
+<tr><td>2025-05-08</td><td>SH603659</td><td class='sell'>SELL</td><td>2,492</td><td>¥4.72</td><td>¥11,758</td></tr>
+<tr><td>2025-05-08</td><td>SZ002459</td><td class='buy'>BUY</td><td>13,153</td><td>¥1.09</td><td>¥14,352</td></tr>
+<tr><td>2025-05-08</td><td>SH600196</td><td class='sell'>SELL</td><td>342</td><td>¥27.63</td><td>¥9,446</td></tr>
+<tr><td>2025-05-08</td><td>SH601878</td><td class='buy'>BUY</td><td>9,773</td><td>¥1.36</td><td>¥13,323</td></tr>
+<tr><td>2025-05-09</td><td>SH600438</td><td class='sell'>SELL</td><td>535</td><td>¥28.84</td><td>¥15,438</td></tr>
+<tr><td>2025-05-09</td><td>SH601238</td><td class='buy'>BUY</td><td>7,155</td><td>¥1.94</td><td>¥13,875</td></tr>
+<tr><td>2025-05-09</td><td>SZ000338</td><td class='buy'>BUY</td><td>1,736</td><td>¥8.02</td><td>¥13,928</td></tr>
+<tr><td>2025-05-09</td><td>SH601878</td><td class='sell'>SELL</td><td>9,773</td><td>¥1.36</td><td>¥13,323</td></tr>
+<tr><td>2025-05-12</td><td>SH600660</td><td class='buy'>BUY</td><td>227</td><td>¥63.64</td><td>¥14,423</td></tr>
+<tr><td>2025-05-12</td><td>SH601238</td><td class='sell'>SELL</td><td>7,155</td><td>¥1.94</td><td>¥13,875</td></tr>
+<tr><td>2025-05-12</td><td>SZ002493</td><td class='sell'>SELL</td><td>3,439</td><td>¥4.22</td><td>¥14,504</td></tr>
+<tr><td>2025-05-12</td><td>SH600760</td><td class='buy'>BUY</td><td>1,789</td><td>¥8.05</td><td>¥14,400</td></tr>
+<tr><td>2025-05-13</td><td>SZ002463</td><td class='buy'>BUY</td><td>5,060</td><td>¥2.79</td><td>¥14,102</td></tr>
+<tr><td>2025-05-13</td><td>SH601100</td><td class='buy'>BUY</td><td>2,035</td><td>¥7.06</td><td>¥14,359</td></tr>
+<tr><td>2025-05-13</td><td>SZ002459</td><td class='sell'>SELL</td><td>13,153</td><td>¥1.14</td><td>¥15,058</td></tr>
+<tr><td>2025-05-13</td><td>SZ000338</td><td class='sell'>SELL</td><td>1,736</td><td>¥7.93</td><td>¥13,768</td></tr>
+<tr><td>2025-05-14</td><td>SZ000786</td><td class='sell'>SELL</td><td>643</td><td>¥23.54</td><td>¥15,127</td></tr>
+<tr><td>2025-05-14</td><td>SZ002463</td><td class='sell'>SELL</td><td>5,060</td><td>¥2.79</td><td>¥14,102</td></tr>
+<tr><td>2025-05-14</td><td>SZ000938</td><td class='buy'>BUY</td><td>3,637</td><td>¥3.96</td><td>¥14,406</td></tr>
+            </table>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        Plotly.newPlot('value-chart', [
+            {x: ['2024-11-15', '2024-11-18', '2024-11-19', '2024-11-20', '2024-11-21', '2024-11-22', '2024-11-25', '2024-11-26', '2024-11-27', '2024-11-28', '2024-11-29', '2024-12-02', '2024-12-03', '2024-12-04', '2024-12-05', '2024-12-06', '2024-12-09', '2024-12-10', '2024-12-11', '2024-12-12', '2024-12-13', '2024-12-16', '2024-12-17', '2024-12-18', '2024-12-19', '2024-12-20', '2024-12-23', '2024-12-24', '2024-12-25', '2024-12-26', '2024-12-27', '2024-12-30', '2024-12-31', '2025-01-02', '2025-01-03', '2025-01-06', '2025-01-07', '2025-01-08', '2025-01-09', '2025-01-10', '2025-01-13', '2025-01-14', '2025-01-15', '2025-01-16', '2025-01-17', '2025-01-20', '2025-01-21', '2025-01-22', '2025-01-23', '2025-01-24', '2025-01-27', '2025-02-05', '2025-02-06', '2025-02-07', '2025-02-10', '2025-02-11', '2025-02-12', '2025-02-13', '2025-02-14', '2025-02-17', '2025-02-18', '2025-02-19', '2025-02-20', '2025-02-21', '2025-02-24', '2025-02-25', '2025-02-26', '2025-02-27', '2025-02-28', '2025-03-03', '2025-03-04', '2025-03-05', '2025-03-06', '2025-03-07', '2025-03-10', '2025-03-11', '2025-03-12', '2025-03-13', '2025-03-14', '2025-03-17', '2025-03-18', '2025-03-19', '2025-03-20', '2025-03-21', '2025-03-24', '2025-03-25', '2025-03-26', '2025-03-27', '2025-03-28', '2025-03-31', '2025-04-01', '2025-04-02', '2025-04-03', '2025-04-07', '2025-04-08', '2025-04-09', '2025-04-10', '2025-04-11', '2025-04-14', '2025-04-15', '2025-04-16', '2025-04-17', '2025-04-18', '2025-04-21', '2025-04-22', '2025-04-23', '2025-04-24', '2025-04-25', '2025-04-28', '2025-04-29', '2025-04-30', '2025-05-06', '2025-05-07', '2025-05-08', '2025-05-09', '2025-05-12', '2025-05-13', '2025-05-14'], y: [100000.0, 100071.00517080567, 99386.15131170976, 100077.36570999809, 102281.23176287442, 102481.35978957661, 102099.81800422654, 101825.8089172614, 103308.97266630735, 103084.98874225676, 103926.07982883377, 104547.52470721169, 102972.43521004202, 104361.60441487492, 107702.09591047763, 107421.2861720016, 111532.27800003404, 114858.68812857431, 115339.42718231003, 117162.04418054402, 117530.48768038413, 118290.58921309093, 117697.62355511793, 116836.32053905839, 119235.95322404605, 116708.66003163977, 120328.14627572062, 118151.38084261562, 115591.94816021186, 113984.15760145478, 113113.50708938664, 114545.701066042, 112585.45700646417, 114323.94273658292, 114793.1039793034, 116899.25666762669, 116096.61233765811, 117166.7802834703, 117925.71205293169, 117482.58097299308, 117479.64938519694, 117604.28169207933, 118326.39316307387, 117839.2888247846, 119404.3195905012, 119024.11733635016, 120012.64252966299, 120124.41552749448, 118227.00072709598, 121192.11352436832, 121812.0379452315, 125114.11695319446, 125148.54160072416, 123412.30877661357, 127410.0315970873, 127149.54884173085, 129475.30860803359, 132173.2469480886, 137765.93623898522, 142232.27225660282, 147773.4886714755, 147388.60054838783, 146360.43573880405, 151036.25590086693, 150192.6709399549, 148939.80295140858, 144742.15422509948, 144906.96764344588, 146988.7174473973, 146354.96783652273, 147854.12024184724, 148746.96774359897, 141798.8272209719, 142923.2634980562, 143823.42858163163, 146343.46562952356, 146281.77632435216, 148127.912994136, 150017.66059746235, 150406.42716620056, 149741.9465231102, 148574.88029174902, 144755.7142422717, 145454.63354479885, 145456.17312787968, 143588.4948766472, 143067.14375627515, 146461.32444771758, 151678.12153832644, 152446.48330181203, 149216.19966746733, 148532.0914479397, 150628.10815922133, 151292.68412618682, 151305.3487978292, 148063.68750459398, 148824.8426209418, 152530.31903760758, 150328.7935711153, 152987.64002084488, 154556.52954559383, 153943.50375040673, 153244.7173205071, 147759.20769528416, 148778.75227567408, 144058.12706069765, 143911.1594219479, 146725.8079882788, 146643.52485411087, 147210.70612292812, 147250.2968756713, 147613.91090707967, 150165.65861143512, 149678.21131633, 145493.88722100426, 147099.14972926243, 144275.14641104193, 143880.77813333037], name: 'LightGBM', line: {color: '#1a73e8', width: 2}},
+            {x: ['2024-11-15', '2024-11-18', '2024-11-19', '2024-11-20', '2024-11-21', '2024-11-22', '2024-11-25', '2024-11-26', '2024-11-27', '2024-11-28', '2024-11-29', '2024-12-02', '2024-12-03', '2024-12-04', '2024-12-05', '2024-12-06', '2024-12-09', '2024-12-10', '2024-12-11', '2024-12-12', '2024-12-13', '2024-12-16', '2024-12-17', '2024-12-18', '2024-12-19', '2024-12-20', '2024-12-23', '2024-12-24', '2024-12-25', '2024-12-26', '2024-12-27', '2024-12-30', '2024-12-31', '2025-01-02', '2025-01-03', '2025-01-06', '2025-01-07', '2025-01-08', '2025-01-09', '2025-01-10', '2025-01-13', '2025-01-14', '2025-01-15', '2025-01-16', '2025-01-17', '2025-01-20', '2025-01-21', '2025-01-22', '2025-01-23', '2025-01-24', '2025-01-27', '2025-02-05', '2025-02-06', '2025-02-07', '2025-02-10', '2025-02-11', '2025-02-12', '2025-02-13', '2025-02-14', '2025-02-17', '2025-02-18', '2025-02-19', '2025-02-20', '2025-02-21', '2025-02-24', '2025-02-25', '2025-02-26', '2025-02-27', '2025-02-28', '2025-03-03', '2025-03-04', '2025-03-05', '2025-03-06', '2025-03-07', '2025-03-10', '2025-03-11', '2025-03-12', '2025-03-13', '2025-03-14', '2025-03-17', '2025-03-18', '2025-03-19', '2025-03-20', '2025-03-21', '2025-03-24', '2025-03-25', '2025-03-26', '2025-03-27', '2025-03-28', '2025-03-31', '2025-04-01', '2025-04-02', '2025-04-03', '2025-04-07', '2025-04-08', '2025-04-09', '2025-04-10', '2025-04-11', '2025-04-14', '2025-04-15', '2025-04-16', '2025-04-17', '2025-04-18', '2025-04-21', '2025-04-22', '2025-04-23', '2025-04-24', '2025-04-25', '2025-04-28', '2025-04-29', '2025-04-30', '2025-05-06', '2025-05-07', '2025-05-08', '2025-05-09', '2025-05-12', '2025-05-13', '2025-05-14'], y: [100000.0, 98948.36770119476, 96767.24026337468, 95978.82770089051, 98766.69392264693, 98658.46771391926, 98831.86569885291, 99119.66921175396, 101314.6146638507, 100453.30381755038, 100761.96621125487, 99761.0484088145, 98974.79860046056, 99093.55995632462, 98686.38466671019, 96710.2233525094, 99272.38652884783, 101431.5526696065, 101006.7026806981, 102704.70467952402, 101180.23674484607, 100069.50968024468, 100532.16499058023, 100148.12251120192, 101283.75108012895, 98513.45427724475, 99173.93953751853, 98094.85664535649, 97705.66581824278, 95893.05189823918, 95434.59251855222, 98270.66395687903, 98337.23427327309, 98610.21875711807, 100919.64387952944, 104615.09828119098, 102851.70493567898, 103350.54186202688, 104325.25480421794, 104137.41233068102, 104492.75592040585, 105389.23234146772, 106656.1905158175, 106360.85093239331, 109558.8955682797, 110463.28953358327, 111750.13134861088, 110991.88850592914, 112491.98411419046, 115360.86191339698, 115255.41798692879, 114463.70704980295, 114311.49821351582, 114886.09010368306, 117554.65528849929, 116245.4245730863, 116862.90412416289, 116930.62681547609, 122054.6579205084, 124416.67998833985, 125125.34334059872, 129483.21733424248, 130165.02505412119, 134507.44070099242, 133338.52389961365, 130070.58649960007, 122040.56608409894, 123914.12182998544, 127757.54199257787, 128614.1408689679, 129930.53669697445, 129988.46708686747, 123329.01570465835, 126688.98596348033, 127704.17662611917, 131208.1266793119, 133673.15202010318, 134773.14542950402, 138091.98468900975, 134696.68864032978, 134052.2758089137, 131422.38517261617, 130018.05793247507, 129661.63438048755, 128966.29958723197, 122887.41236174479, 121300.70267958762, 123222.70533721468, 125666.20412930228, 126705.5406515868, 123121.41190101157, 121879.30999972222, 123002.69166642918, 123109.18211777473, 123132.69526507006, 121402.7630572522, 121442.92358994807, 127390.88799121819, 126100.19082440904, 126193.78431207595, 127173.02011659098, 125676.66577077836, 125135.0362858854, 121419.21843303433, 121846.66855015504, 117817.57821841715, 118113.4169365038, 121608.14170784387, 122037.45055860451, 124150.59649813111, 123771.08157516985, 126379.45156063836, 128148.76982706625, 128612.94501234873, 126632.08535614137, 127449.08264586389, 122955.19543451992, 121951.70405805069], name: 'XGBoost', line: {color: '#fbbc04', width: 2}},
+            {x: ['2024-11-15', '2024-11-18', '2024-11-19', '2024-11-20', '2024-11-21', '2024-11-22', '2024-11-25', '2024-11-26', '2024-11-27', '2024-11-28', '2024-11-29', '2024-12-02', '2024-12-03', '2024-12-04', '2024-12-05', '2024-12-06', '2024-12-09', '2024-12-10', '2024-12-11', '2024-12-12', '2024-12-13', '2024-12-16', '2024-12-17', '2024-12-18', '2024-12-19', '2024-12-20', '2024-12-23', '2024-12-24', '2024-12-25', '2024-12-26', '2024-12-27', '2024-12-30', '2024-12-31', '2025-01-02', '2025-01-03', '2025-01-06', '2025-01-07', '2025-01-08', '2025-01-09', '2025-01-10', '2025-01-13', '2025-01-14', '2025-01-15', '2025-01-16', '2025-01-17', '2025-01-20', '2025-01-21', '2025-01-22', '2025-01-23', '2025-01-24', '2025-01-27', '2025-02-05', '2025-02-06', '2025-02-07', '2025-02-10', '2025-02-11', '2025-02-12', '2025-02-13', '2025-02-14', '2025-02-17', '2025-02-18', '2025-02-19', '2025-02-20', '2025-02-21', '2025-02-24', '2025-02-25', '2025-02-26', '2025-02-27', '2025-02-28', '2025-03-03', '2025-03-04', '2025-03-05', '2025-03-06', '2025-03-07', '2025-03-10', '2025-03-11', '2025-03-12', '2025-03-13', '2025-03-14', '2025-03-17', '2025-03-18', '2025-03-19', '2025-03-20', '2025-03-21', '2025-03-24', '2025-03-25', '2025-03-26', '2025-03-27', '2025-03-28', '2025-03-31', '2025-04-01', '2025-04-02', '2025-04-03', '2025-04-07', '2025-04-08', '2025-04-09', '2025-04-10', '2025-04-11', '2025-04-14', '2025-04-15', '2025-04-16', '2025-04-17', '2025-04-18', '2025-04-21', '2025-04-22', '2025-04-23', '2025-04-24', '2025-04-25', '2025-04-28', '2025-04-29', '2025-04-30', '2025-05-06', '2025-05-07', '2025-05-08', '2025-05-09', '2025-05-12', '2025-05-13', '2025-05-14', '2025-05-15', '2025-05-16', '2025-05-19', '2025-05-20', '2025-05-21', '2025-05-22', '2025-05-23', '2025-05-26', '2025-05-27', '2025-05-28', '2025-05-29', '2025-05-30', '2025-06-03', '2025-06-04', '2025-06-05', '2025-06-06', '2025-06-09', '2025-06-10', '2025-06-11', '2025-06-12', '2025-06-13', '2025-06-16', '2025-06-17', '2025-06-18', '2025-06-19', '2025-06-20', '2025-06-23', '2025-06-24', '2025-06-25', '2025-06-26', '2025-06-27', '2025-06-30', '2025-07-01', '2025-07-02', '2025-07-03', '2025-07-04', '2025-07-07', '2025-07-08', '2025-07-09', '2025-07-10', '2025-07-11', '2025-07-14', '2025-07-15', '2025-07-16', '2025-07-17', '2025-07-18', '2025-07-21', '2025-07-22', '2025-07-23', '2025-07-24', '2025-07-25', '2025-07-28', '2025-07-29', '2025-07-30', '2025-07-31', '2025-08-01', '2025-08-04', '2025-08-05', '2025-08-06', '2025-08-07', '2025-08-08', '2025-08-11', '2025-08-12', '2025-08-13', '2025-08-14', '2025-08-15', '2025-08-18', '2025-08-19', '2025-08-20', '2025-08-21', '2025-08-22', '2025-08-25', '2025-08-26', '2025-08-27', '2025-08-28', '2025-08-29', '2025-09-01', '2025-09-02', '2025-09-03', '2025-09-04', '2025-09-05', '2025-09-08', '2025-09-09', '2025-09-10', '2025-09-11', '2025-09-12', '2025-09-15', '2025-09-16', '2025-09-17', '2025-09-18', '2025-09-19', '2025-09-22', '2025-09-23', '2025-09-24', '2025-09-25', '2025-09-26', '2025-09-29', '2025-09-30', '2025-10-09', '2025-10-10', '2025-10-13', '2025-10-14', '2025-10-15', '2025-10-16', '2025-10-17', '2025-10-20', '2025-10-21', '2025-10-22', '2025-10-23', '2025-10-24', '2025-10-27', '2025-10-28', '2025-10-29', '2025-10-30', '2025-10-31', '2025-11-03', '2025-11-04', '2025-11-05', '2025-11-06', '2025-11-07', '2025-11-10', '2025-11-11', '2025-11-12', '2025-11-13', '2025-11-14', '2025-11-17', '2025-11-18', '2025-11-19', '2025-11-20', '2025-11-21', '2025-11-24', '2025-11-25'], y: [100073.8045709254, 100404.01230912493, 99778.28729034952, 99356.72160222138, 101274.94072529428, 100524.49510399817, 100657.42451986819, 101640.09951836665, 102010.02972297769, 100807.56576357725, 101637.18951575075, 101382.18269803034, 100514.1642844769, 101197.35099669761, 101895.90053722744, 102369.36230612185, 103575.53046927857, 104202.31028644354, 103901.50039983065, 104927.08087399851, 104835.9835213191, 104837.57192359984, 105049.67326565085, 103910.24281707116, 103581.88407840156, 103849.07071517318, 104731.91835314452, 104175.04685042166, 103607.57152153552, 101231.5140551265, 101370.79708011952, 102521.35875405726, 101802.15998387772, 102093.96685600092, 102369.09550417626, 105131.50080189497, 105455.34872627512, 105457.47073244705, 105418.81547381793, 105923.5178891325, 106471.66558870408, 107135.77906416303, 106941.94434834059, 105781.31865682718, 105971.97656808811, 104698.54949585602, 106276.24247060092, 106356.20859792228, 107065.60394777532, 108504.2744947764, 108592.71623739268, 109115.4370910795, 109570.88662629809, 108795.82076965041, 110232.09630383753, 112451.66512211092, 114783.50171721178, 117001.46972381159, 123634.47632610495, 124376.97993599733, 126386.02340510761, 128154.10128447144, 125833.3835053358, 128476.89441046202, 127251.65301054352, 125604.07033544575, 119560.7828986654, 120314.132317881, 123904.83976743805, 124189.23823204871, 124809.1370408959, 124755.91315509805, 119278.49403083387, 119883.83662190517, 120938.00213243008, 123870.67670900917, 123265.34652733071, 124295.42540639521, 126314.79349033037, 126433.68788292285, 126468.3721358501, 126088.3841183598, 124636.48515861439, 125085.05989021163, 123944.02862995837, 123039.9919537497, 122724.0860407733, 124549.09821438766, 127477.80178526489, 127412.39187571945, 125503.70316633105, 123874.38711746185, 124925.37582342527, 125905.40762125343, 126066.94068756972, 124588.82068079915, 125256.64456471078, 128246.7870394316, 127504.01042289722, 128189.85274518107, 128236.72302185593, 127527.31526261006, 126285.92924263491, 123615.415498736, 124277.94057191418, 121370.43224397066, 121301.31192597252, 122500.86588275706, 123130.29510528874, 124121.44571908213, 123297.38757958765, 122644.65351734313, 125408.64721734259, 124199.56284687357, 122725.41384580487, 123164.18515707563, 120800.58051635981, 120984.61181185575, 310395.82576457196, 305596.7283768366, 303070.88764644944, 309890.6576184946, 309890.6576184946, 313932.0027871139, 308880.3213263398, 304333.808011643, 307869.98503418494, 308627.737253301, 307364.8168881075, 311406.1620567268, 316710.4275905397, 312669.0824219204, 311153.5779836881, 311153.5779836881, 310900.99391064944, 312163.91427584295, 311911.33020280424, 314689.75500623, 311658.7461297656, 317720.76388269453, 316710.4275905397, 322772.4453434687, 321762.1090513139, 328834.4630963977, 336159.4012145202, 336159.4012145202, 339948.16231010086, 343989.50747872016, 342221.41896744916, 350556.69337772654, 358134.2155688878, 358639.3837149652, 358134.2155688878, 368237.57849043614, 368742.7466365135, 359397.13593408134, 357881.63149584905, 358639.3837149652, 348536.0207934169, 356366.12705761683, 351819.6137429201, 350778.6824054169, 349737.7070867064, 350258.1947460617, 350778.6824054169, 344272.58666347666, 346875.02496025275, 339848.44155895733, 340108.6853886349, 340368.9292183125, 332821.85815766186, 335164.05262476037, 333342.3458170171, 336205.02794347075, 341670.14836670057, 357805.2658067123, 358846.2411254227, 362489.6547409093, 368735.5066531719, 363790.8738892973, 361448.67942219885, 359887.2164441332, 360928.1917628436, 353641.3645318706, 354942.58368025866, 356243.8028286467, 357024.5343176795, 358585.9972957451, 362749.89857058687, 365092.0930376853, 365092.0930376853, 357805.2658067123, 360667.947933166, 354682.339850581, 351038.9262350945, 357284.7781473571, 358585.9972957451, 358325.75346606754, 356243.8028286467, 353381.12070219294, 364831.84920800774, 363530.6300596197, 367434.28750478383, 353901.60836154816, 349477.46325702884, 342450.87985573336, 337246.00326218124, 331780.8828389514, 333342.3458170171, 326315.7624157216, 323973.56794862315, 317987.9598660382, 323453.08028926793, 318768.691355071, 313824.05859119643, 309660.1573163547, 307057.7190195786, 308098.694338289, 325535.0309266888, 332301.37049830664, 342711.123685411, 346614.7811305751, 346614.7811305751, 338026.73475121404, 338026.73475121404, 339067.7100699245, 337506.2470918588, 337766.49092153646, 337506.2470918588, 322412.1049705575, 307317.9628492562, 302893.81774473685, 298990.1602995727, 296908.2096621518, 302373.3300853816, 308619.1819976442, 303414.30540409207, 304455.28072280245, 304195.03689312487, 303674.54923376965, 303934.7930634472, 303414.30540409207, 302373.3300853816, 295867.2343434414, 297949.18498086225, 300811.867107316, 304455.28072280245, 299770.8917886055, 300031.1356182831, 302113.086255704], name: 'Buy & Hold (含新数据)', line: {color: '#ea4335', width: 2, dash: 'dash'}}
+        ], {margin: {t:20,r:50,b:50,l:80}, yaxis: {title: '账户价值 (¥)', tickformat: ',.0f'}, hovermode: 'x unified', legend: {x: 0.02, y: 0.98}});
+        
+        Plotly.newPlot('return-chart', [
+            {x: ['2024-11-15', '2024-11-18', '2024-11-19', '2024-11-20', '2024-11-21', '2024-11-22', '2024-11-25', '2024-11-26', '2024-11-27', '2024-11-28', '2024-11-29', '2024-12-02', '2024-12-03', '2024-12-04', '2024-12-05', '2024-12-06', '2024-12-09', '2024-12-10', '2024-12-11', '2024-12-12', '2024-12-13', '2024-12-16', '2024-12-17', '2024-12-18', '2024-12-19', '2024-12-20', '2024-12-23', '2024-12-24', '2024-12-25', '2024-12-26', '2024-12-27', '2024-12-30', '2024-12-31', '2025-01-02', '2025-01-03', '2025-01-06', '2025-01-07', '2025-01-08', '2025-01-09', '2025-01-10', '2025-01-13', '2025-01-14', '2025-01-15', '2025-01-16', '2025-01-17', '2025-01-20', '2025-01-21', '2025-01-22', '2025-01-23', '2025-01-24', '2025-01-27', '2025-02-05', '2025-02-06', '2025-02-07', '2025-02-10', '2025-02-11', '2025-02-12', '2025-02-13', '2025-02-14', '2025-02-17', '2025-02-18', '2025-02-19', '2025-02-20', '2025-02-21', '2025-02-24', '2025-02-25', '2025-02-26', '2025-02-27', '2025-02-28', '2025-03-03', '2025-03-04', '2025-03-05', '2025-03-06', '2025-03-07', '2025-03-10', '2025-03-11', '2025-03-12', '2025-03-13', '2025-03-14', '2025-03-17', '2025-03-18', '2025-03-19', '2025-03-20', '2025-03-21', '2025-03-24', '2025-03-25', '2025-03-26', '2025-03-27', '2025-03-28', '2025-03-31', '2025-04-01', '2025-04-02', '2025-04-03', '2025-04-07', '2025-04-08', '2025-04-09', '2025-04-10', '2025-04-11', '2025-04-14', '2025-04-15', '2025-04-16', '2025-04-17', '2025-04-18', '2025-04-21', '2025-04-22', '2025-04-23', '2025-04-24', '2025-04-25', '2025-04-28', '2025-04-29', '2025-04-30', '2025-05-06', '2025-05-07', '2025-05-08', '2025-05-09', '2025-05-12', '2025-05-13', '2025-05-14'], y: [0.0, 0.07100517080567137, -0.6138486882902416, 0.07736570999810066, 2.281231762874425, 2.4813597895766204, 2.099818004226539, 1.8258089172614067, 3.3089726663073415, 3.0849887422567557, 3.926079828833773, 4.547524707211692, 2.9724352100420237, 4.36160441487492, 7.702095910477635, 7.4212861720015955, 11.532278000034047, 14.858688128574315, 15.339427182310029, 17.16204418054401, 17.530487680384145, 18.290589213090925, 17.697623555117925, 16.83632053905839, 19.235953224046053, 16.708660031639777, 20.328146275720616, 18.151380842615627, 15.591948160211855, 13.984157601454772, 13.113507089386633, 14.545701066042005, 12.585457006464186, 14.323942736582929, 14.793103979303401, 16.899256667626684, 16.09661233765811, 17.166780283470295, 17.925712052931697, 17.482580972993066, 17.47964938519695, 17.604281692079326, 18.326393163073874, 17.839288824784603, 19.404319590501196, 19.024117336350166, 20.012642529662994, 20.124415527494488, 18.227000727095977, 21.192113524368317, 21.8120379452315, 25.114116953194454, 25.14854160072415, 23.41230877661358, 27.410031597087304, 27.14954884173084, 29.4753086080336, 32.173246948088604, 37.76593623898521, 42.23227225660282, 47.773488671475505, 47.38860054838783, 46.360435738804064, 51.036255900866934, 50.192670939954894, 48.93980295140858, 44.74215422509948, 44.90696764344588, 46.9887174473973, 46.35496783652273, 47.854120241847234, 48.746967743598965, 41.7988272209719, 42.923263498056215, 43.82342858163162, 46.343465629523564, 46.28177632435215, 48.12791299413599, 50.01766059746235, 50.406427166200565, 49.741946523110215, 48.57488029174903, 44.755714242271694, 45.45463354479886, 45.45617312787969, 43.5884948766472, 43.06714375627516, 46.46132444771758, 51.67812153832643, 52.44648330181203, 49.21619966746733, 48.532091447939685, 50.62810815922134, 51.29268412618681, 51.30534879782922, 48.06368750459398, 48.8248426209418, 52.53031903760758, 50.328793571115305, 52.987640020844886, 54.556529545593826, 53.94350375040673, 53.24471732050711, 47.75920769528417, 48.77875227567407, 44.05812706069765, 43.9111594219479, 46.72580798827881, 46.64352485411087, 47.21070612292812, 47.2502968756713, 47.61391090707967, 50.16565861143511, 49.678211316330014, 45.49388722100427, 47.099149729262436, 44.27514641104193, 43.88077813333038], name: 'LightGBM', fill: 'tozeroy', line: {color: '#1a73e8'}},
+            {x: ['2024-11-15', '2024-11-18', '2024-11-19', '2024-11-20', '2024-11-21', '2024-11-22', '2024-11-25', '2024-11-26', '2024-11-27', '2024-11-28', '2024-11-29', '2024-12-02', '2024-12-03', '2024-12-04', '2024-12-05', '2024-12-06', '2024-12-09', '2024-12-10', '2024-12-11', '2024-12-12', '2024-12-13', '2024-12-16', '2024-12-17', '2024-12-18', '2024-12-19', '2024-12-20', '2024-12-23', '2024-12-24', '2024-12-25', '2024-12-26', '2024-12-27', '2024-12-30', '2024-12-31', '2025-01-02', '2025-01-03', '2025-01-06', '2025-01-07', '2025-01-08', '2025-01-09', '2025-01-10', '2025-01-13', '2025-01-14', '2025-01-15', '2025-01-16', '2025-01-17', '2025-01-20', '2025-01-21', '2025-01-22', '2025-01-23', '2025-01-24', '2025-01-27', '2025-02-05', '2025-02-06', '2025-02-07', '2025-02-10', '2025-02-11', '2025-02-12', '2025-02-13', '2025-02-14', '2025-02-17', '2025-02-18', '2025-02-19', '2025-02-20', '2025-02-21', '2025-02-24', '2025-02-25', '2025-02-26', '2025-02-27', '2025-02-28', '2025-03-03', '2025-03-04', '2025-03-05', '2025-03-06', '2025-03-07', '2025-03-10', '2025-03-11', '2025-03-12', '2025-03-13', '2025-03-14', '2025-03-17', '2025-03-18', '2025-03-19', '2025-03-20', '2025-03-21', '2025-03-24', '2025-03-25', '2025-03-26', '2025-03-27', '2025-03-28', '2025-03-31', '2025-04-01', '2025-04-02', '2025-04-03', '2025-04-07', '2025-04-08', '2025-04-09', '2025-04-10', '2025-04-11', '2025-04-14', '2025-04-15', '2025-04-16', '2025-04-17', '2025-04-18', '2025-04-21', '2025-04-22', '2025-04-23', '2025-04-24', '2025-04-25', '2025-04-28', '2025-04-29', '2025-04-30', '2025-05-06', '2025-05-07', '2025-05-08', '2025-05-09', '2025-05-12', '2025-05-13', '2025-05-14'], y: [0.0, -1.0516322988052385, -3.2327597366253125, -4.021172299109487, -1.233306077353069, -1.3415322860807377, -1.1681343011470835, -0.880330788246031, 1.3146146638506995, 0.45330381755037674, 0.7619662112548609, -0.2389515911854989, -1.0252013995394327, -0.9064400436753828, -1.3136153332898082, -3.2897766474905943, -0.7276134711521776, 1.4315526696065062, 1.0067026806980905, 2.704704679524017, 1.1802367448460638, 0.06950968024468374, 0.5321649905802417, 0.1481225112019091, 1.2837510801289476, -1.4865457227552503, -0.8260604624814705, -1.9051433546435126, -2.2943341817572183, -4.106948101760821, -4.565407481447781, -1.729336043120977, -1.6627657267269114, -1.3897812428819267, 0.9196438795294304, 4.615098281190977, 2.851704935678989, 3.350541862026879, 4.325254804217948, 4.137412330681012, 4.492755920405855, 5.389232341467731, 6.656190515817517, 6.360850932393314, 9.558895568279691, 10.463289533583264, 11.750131348610893, 10.991888505929136, 12.491984114190458, 15.360861913396985, 15.255417986928798, 14.463707049802954, 14.311498213515828, 14.88609010368307, 17.554655288499287, 16.24542457308631, 16.862904124162892, 16.930626815476103, 22.054657920508404, 24.41667998833985, 25.125343340598725, 29.483217334242482, 30.165025054121198, 34.50744070099241, 33.33852389961365, 30.070586499600083, 22.040566084098945, 23.914121829985447, 27.75754199257787, 28.614140868967898, 29.930536696974453, 29.988467086867466, 23.329015704658353, 26.688985963480327, 27.70417662611917, 31.20812667931192, 33.67315202010319, 34.77314542950403, 38.09198468900976, 34.696688640329775, 34.0522758089137, 31.422385172616174, 30.018057932475074, 29.661634380487545, 28.96629958723198, 22.887412361744786, 21.300702679587612, 23.222705337214666, 25.666204129302272, 26.70554065158679, 23.12141190101158, 21.879309999722206, 23.002691666429186, 23.10918211777473, 23.132695265070048, 21.402763057252194, 21.44292358994806, 27.390887991218182, 26.10019082440904, 26.19378431207595, 27.173020116590973, 25.676665770778364, 25.135036285885406, 21.419218433034338, 21.846668550155044, 17.81757821841716, 18.11341693650379, 21.608141707843863, 22.03745055860451, 24.150596498131115, 23.771081575169852, 26.379451560638365, 28.148769827066246, 28.612945012348725, 26.632085356141367, 27.449082645863896, 22.955195434519915, 21.95170405805069], name: 'XGBoost', line: {color: '#fbbc04', width: 2}},
+            {x: ['2024-11-15', '2024-11-18', '2024-11-19', '2024-11-20', '2024-11-21', '2024-11-22', '2024-11-25', '2024-11-26', '2024-11-27', '2024-11-28', '2024-11-29', '2024-12-02', '2024-12-03', '2024-12-04', '2024-12-05', '2024-12-06', '2024-12-09', '2024-12-10', '2024-12-11', '2024-12-12', '2024-12-13', '2024-12-16', '2024-12-17', '2024-12-18', '2024-12-19', '2024-12-20', '2024-12-23', '2024-12-24', '2024-12-25', '2024-12-26', '2024-12-27', '2024-12-30', '2024-12-31', '2025-01-02', '2025-01-03', '2025-01-06', '2025-01-07', '2025-01-08', '2025-01-09', '2025-01-10', '2025-01-13', '2025-01-14', '2025-01-15', '2025-01-16', '2025-01-17', '2025-01-20', '2025-01-21', '2025-01-22', '2025-01-23', '2025-01-24', '2025-01-27', '2025-02-05', '2025-02-06', '2025-02-07', '2025-02-10', '2025-02-11', '2025-02-12', '2025-02-13', '2025-02-14', '2025-02-17', '2025-02-18', '2025-02-19', '2025-02-20', '2025-02-21', '2025-02-24', '2025-02-25', '2025-02-26', '2025-02-27', '2025-02-28', '2025-03-03', '2025-03-04', '2025-03-05', '2025-03-06', '2025-03-07', '2025-03-10', '2025-03-11', '2025-03-12', '2025-03-13', '2025-03-14', '2025-03-17', '2025-03-18', '2025-03-19', '2025-03-20', '2025-03-21', '2025-03-24', '2025-03-25', '2025-03-26', '2025-03-27', '2025-03-28', '2025-03-31', '2025-04-01', '2025-04-02', '2025-04-03', '2025-04-07', '2025-04-08', '2025-04-09', '2025-04-10', '2025-04-11', '2025-04-14', '2025-04-15', '2025-04-16', '2025-04-17', '2025-04-18', '2025-04-21', '2025-04-22', '2025-04-23', '2025-04-24', '2025-04-25', '2025-04-28', '2025-04-29', '2025-04-30', '2025-05-06', '2025-05-07', '2025-05-08', '2025-05-09', '2025-05-12', '2025-05-13', '2025-05-14', '2025-05-15', '2025-05-16', '2025-05-19', '2025-05-20', '2025-05-21', '2025-05-22', '2025-05-23', '2025-05-26', '2025-05-27', '2025-05-28', '2025-05-29', '2025-05-30', '2025-06-03', '2025-06-04', '2025-06-05', '2025-06-06', '2025-06-09', '2025-06-10', '2025-06-11', '2025-06-12', '2025-06-13', '2025-06-16', '2025-06-17', '2025-06-18', '2025-06-19', '2025-06-20', '2025-06-23', '2025-06-24', '2025-06-25', '2025-06-26', '2025-06-27', '2025-06-30', '2025-07-01', '2025-07-02', '2025-07-03', '2025-07-04', '2025-07-07', '2025-07-08', '2025-07-09', '2025-07-10', '2025-07-11', '2025-07-14', '2025-07-15', '2025-07-16', '2025-07-17', '2025-07-18', '2025-07-21', '2025-07-22', '2025-07-23', '2025-07-24', '2025-07-25', '2025-07-28', '2025-07-29', '2025-07-30', '2025-07-31', '2025-08-01', '2025-08-04', '2025-08-05', '2025-08-06', '2025-08-07', '2025-08-08', '2025-08-11', '2025-08-12', '2025-08-13', '2025-08-14', '2025-08-15', '2025-08-18', '2025-08-19', '2025-08-20', '2025-08-21', '2025-08-22', '2025-08-25', '2025-08-26', '2025-08-27', '2025-08-28', '2025-08-29', '2025-09-01', '2025-09-02', '2025-09-03', '2025-09-04', '2025-09-05', '2025-09-08', '2025-09-09', '2025-09-10', '2025-09-11', '2025-09-12', '2025-09-15', '2025-09-16', '2025-09-17', '2025-09-18', '2025-09-19', '2025-09-22', '2025-09-23', '2025-09-24', '2025-09-25', '2025-09-26', '2025-09-29', '2025-09-30', '2025-10-09', '2025-10-10', '2025-10-13', '2025-10-14', '2025-10-15', '2025-10-16', '2025-10-17', '2025-10-20', '2025-10-21', '2025-10-22', '2025-10-23', '2025-10-24', '2025-10-27', '2025-10-28', '2025-10-29', '2025-10-30', '2025-10-31', '2025-11-03', '2025-11-04', '2025-11-05', '2025-11-06', '2025-11-07', '2025-11-10', '2025-11-11', '2025-11-12', '2025-11-13', '2025-11-14', '2025-11-17', '2025-11-18', '2025-11-19', '2025-11-20', '2025-11-21', '2025-11-24', '2025-11-25'], y: [0.07380457092538428, 0.4040123091249237, -0.22171270965049006, -0.6432783977786127, 1.2749407252942824, 0.5244951039981682, 0.6574245198681883, 1.6400995183666556, 2.010029722977702, 0.807565763577256, 1.6371895157507588, 1.382182698030343, 0.5141642844769034, 1.1973509966976215, 1.8959005372274351, 2.3693623061218583, 3.575530469278565, 4.2023102864435335, 3.9015003998306597, 4.927080873998513, 4.835983521319087, 4.837571923599837, 5.049673265650845, 3.9102428170711745, 3.581884078401565, 3.849070715173175, 4.731918353144526, 4.175046850421649, 3.607571521535524, 1.2315140551265147, 1.3707970801195124, 2.521358754057257, 1.8021599838777158, 2.0939668560009173, 2.369095504176255, 5.131500801894973, 5.455348726275111, 5.457470732447045, 5.418815473817928, 5.923517889132501, 6.47166558870409, 7.135779064163028, 6.94194434834059, 5.7813186568271835, 5.9719765680881, 4.698549495856019, 6.276242470600923, 6.356208597922275, 7.065603947775312, 8.504274494776398, 8.592716237392683, 9.115437091079492, 9.57088662629808, 8.795820769650419, 10.232096303837523, 12.45166512211091, 14.783501717211788, 17.001469723811603, 23.63447632610496, 24.376979935997323, 26.386023405107608, 28.154101284471444, 25.833383505335817, 28.476894410462016, 27.25165301054353, 25.604070335445762, 19.56078289866541, 20.314132317880997, 23.904839767438048, 24.189238232048705, 24.809137040895912, 24.755913155098064, 19.27849403083386, 19.88383662190516, 20.938002132430068, 23.870676709009174, 23.2653465273307, 24.29542540639522, 26.314793490330366, 26.43368788292286, 26.468372135850117, 26.08838411835981, 24.636485158614384, 25.085059890211635, 23.944028629958368, 23.039991953749706, 22.724086040773294, 24.549098214387666, 27.477801785264887, 27.412391875719443, 25.503703166331036, 23.874387117461858, 24.925375823425266, 25.905407621253417, 26.06694068756972, 24.588820680799152, 25.256644564710772, 28.2467870394316, 27.50401042289723, 28.189852745181064, 28.236723021855937, 27.527315262610053, 26.285929242634907, 23.615415498736002, 24.27794057191417, 21.37043224397066, 21.30131192597251, 22.50086588275706, 23.130295105288745, 24.121445719082125, 23.297387579587657, 22.644653517343126, 25.408647217342594, 24.19956284687357, 22.725413845804866, 23.164185157075636, 20.800580516359823, 20.984611811855757, 210.39582576457195, 205.59672837683655, 203.07088764644945, 209.8906576184946, 209.8906576184946, 213.93200278711387, 208.8803213263398, 204.33380801164301, 207.86998503418494, 208.627737253301, 207.36481688810753, 211.40616205672683, 216.7104275905397, 212.6690824219204, 211.15357798368808, 211.15357798368808, 210.90099391064942, 212.16391427584296, 211.91133020280427, 214.68975500623003, 211.65874612976558, 217.7207638826945, 216.7104275905397, 222.7724453434687, 221.7621090513139, 228.8344630963977, 236.1594012145202, 236.1594012145202, 239.94816231010088, 243.98950747872016, 242.22141896744915, 250.55669337772653, 258.13421556888784, 258.6393837149652, 258.13421556888784, 268.23757849043614, 268.7427466365135, 259.39713593408135, 257.88163149584904, 258.6393837149652, 248.5360207934169, 256.36612705761684, 251.8196137429201, 250.77868240541693, 249.73770708670645, 250.2581947460617, 250.77868240541693, 244.27258666347663, 246.87502496025274, 239.84844155895732, 240.1086853886349, 240.36892921831247, 232.82185815766186, 235.1640526247604, 233.3423458170171, 236.20502794347072, 241.67014836670057, 257.8052658067123, 258.8462411254227, 262.48965474090926, 268.7355066531719, 263.7908738892973, 261.44867942219884, 259.88721644413323, 260.92819176284354, 253.64136453187055, 254.94258368025865, 256.24380282864666, 257.0245343176795, 258.58599729574513, 262.7498985705869, 265.0920930376853, 265.0920930376853, 257.8052658067123, 260.667947933166, 254.682339850581, 251.0389262350945, 257.2847781473571, 258.58599729574513, 258.32575346606757, 256.24380282864666, 253.38112070219293, 264.8318492080077, 263.53063005961974, 267.43428750478387, 253.90160836154817, 249.47746325702883, 242.45087985573335, 237.24600326218126, 231.7808828389514, 233.3423458170171, 226.31576241572162, 223.97356794862313, 217.98795986603818, 223.45308028926794, 218.76869135507096, 213.82405859119643, 209.6601573163547, 207.0577190195786, 208.098694338289, 225.53503092668882, 232.30137049830665, 242.71112368541102, 246.6147811305751, 246.6147811305751, 238.02673475121404, 238.02673475121404, 239.06771006992446, 237.50624709185882, 237.76649092153644, 237.50624709185882, 222.4121049705575, 207.31796284925616, 202.89381774473685, 198.9901602995727, 196.90820966215182, 202.37333008538155, 208.61918199764418, 203.4143054040921, 204.45528072280243, 204.19503689312486, 203.67454923376965, 203.93479306344724, 203.4143054040921, 202.37333008538155, 195.86723434344137, 197.94918498086224, 200.81186710731598, 204.45528072280243, 199.7708917886055, 200.03113561828312, 202.113086255704], name: 'Buy & Hold (含新数据)', line: {color: '#ea4335', dash: 'dash'}}
+        ], {margin: {t:20,r:50,b:50,l:80}, yaxis: {title: '累计收益率 (%)', ticksuffix: '%'}, hovermode: 'x unified', legend: {x: 0.02, y: 0.98}});
+    </script>
+</body>
+</html>

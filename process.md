@@ -387,3 +387,66 @@ update_data_from_baostock(start_date='2025-05-15')
 ```
 
 或安装 baostock: `pip install baostock`
+
+---
+
+## 2025-11-26 Baostock 数据更新 & 完整回测
+
+### 1. 数据更新结果
+
+✅ **成功从 Baostock 下载 300 只沪深300成分股的最新数据**
+
+- 数据范围: 2025-05-15 ~ 2025-11-25
+- 交易日数: **132 天**
+- 数据位置: `data/baostock_update/`
+
+### 2. 完整回测结果 (含最新数据)
+
+| 指标 | LightGBM (118天) | XGBoost (118天) | Buy & Hold (249天) |
+|------|------------------|-----------------|-------------------|
+| **总收益率** | **+46.37%** | +24.39% | **+201.83%** |
+| **年化收益率** | **+125.60%** | +59.39% | +205.87% |
+| 年化波动率 | 25.91% | 29.72% | 159.11% |
+| **Sharpe Ratio** | **3.16** | 1.62 | 1.10 |
+| **Sortino Ratio** | 4.88 | 2.27 | **11.02** |
+| 最大回撤 | **-6.82%** | -14.32% | -19.76% |
+| **Calmar Ratio** | **18.42** | 4.15 | 10.42 |
+| 胜率 | 58.47% | 56.78% | 54.22% |
+| 盈亏比 | 1.21 | 1.00 | 1.94 |
+
+**说明**: Buy & Hold 包含了5月15日至11月25日的新数据 (132天)，因此收益更高
+
+### 3. 详细交易记录
+
+- LightGBM: **438 条**交易记录
+- XGBoost: **445 条**交易记录
+- 完整 CSV: `output/full_backtest_new_data/*_trades_full.csv`
+
+**示例交易记录** (LightGBM 最后几笔):
+
+| 日期 | 股票 | 操作 | 数量 | 价格 | 金额 |
+|------|------|------|------|------|------|
+| 2025-05-13 | SZ002463 | BUY | 5,060 | ¥2.79 | ¥14,102 |
+| 2025-05-13 | SH601100 | BUY | 2,035 | ¥7.06 | ¥14,359 |
+| 2025-05-14 | SZ000938 | BUY | 3,637 | ¥3.96 | ¥14,406 |
+
+### 4. 新增脚本
+
+- `update_data_baostock.py` - 从 Baostock 更新数据
+- `run_backtest_with_new_data.py` - 使用最新数据运行回测
+
+### 5. 运行命令
+
+```bash
+# 更新数据
+python update_data_baostock.py --start 2025-05-15
+
+# 运行完整回测
+python run_backtest_with_new_data.py
+```
+
+### 6. 报告位置
+
+- HTML 报告: `output/full_backtest_new_data/full_backtest_report.html`
+- 指标对比: `output/full_backtest_new_data/metrics_comparison_full.csv`
+- 交易记录: `output/full_backtest_new_data/*_trades_full.csv`
