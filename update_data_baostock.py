@@ -233,20 +233,87 @@ def merge_with_existing_qlib(baostock_dir, qlib_dir):
     return True
 
 
+def get_last_update_date():
+    """获取上次更新的日期"""
+    log_file = Path(__file__).parent / 'data' / 'baostock_update' / 'update_log.txt'
+    if log_file.exists():
+        with open(log_file) as f:
+            lines = f.readlines()
+            if lines:
+                return lines[-1].strip().split(',')[0]
+    return '2025-05-14'
+
+
+def log_update(date, stock_count):
+    """记录更新日志"""
+    log_file = Path(__file__).parent / 'data' / 'baostock_update' / 'update_log.txt'
+    log_file.parent.mkdir(parents=True, exist_ok=True)
+    with open(log_file, 'a') as f:
+        f.write(f"{date},{stock_count},{datetime.now().isoformat()}\n")
+
+
+def daily_update():
+    """每日更新数据"""
+    print("=" * 60)
+    print("📅 每日数据更新")
+    print("=" * 60)
+    
+    # 获取上次更新日期
+    last_date = get_last_update_date()
+    print(f"上次更新: {last_date}")
+    
+    # 计算开始日期 (上次更新日期的下一天)
+    from datetime import timedelta
+    start_dt = datetime.strptime(last_date, '%Y-%m-%d') + timedelta(days=1)
+    start_date = start_dt.strftime('%Y-%m-%d')
+    end_date = datetime.now().strftime('%Y-%m-%d')
+    
+    if start_date > end_date:
+        print("✅ 数据已是最新，无需更新")
+        return True
+    
+    print(f"更新范围: {start_date} ~ {end_date}")
+    
+    # 执行更新
+    success = update_qlib_data(start_date, end_date)
+    
+    if success:
+        log_update(end_date, 300)
+        print(f"✅ 更新完成，已记录到日志")
+    
+    return success
+
+
 if __name__ == '__main__':
     import argparse
     
     parser = argparse.ArgumentParser(description='从 Baostock 更新股票数据')
-    parser.add_argument('--start', type=str, default='2025-05-15', help='开始日期')
-    parser.add_argument('--end', type=str, default=None, help='结束日期')
+    parser.add_argument('--start', type=str, default=None, help='开始日期 (默认: 上次更新日期的下一天)')
+    parser.add_argument('--end', type=str, default=None, help='结束日期 (默认: 今天)')
     parser.add_argument('--merge', action='store_true', help='合并到现有 Qlib 数据')
+    parser.add_argument('--daily', action='store_true', help='每日增量更新模式')
     
     args = parser.parse_args()
     
-    success = update_qlib_data(args.start, args.end)
+    if args.daily:
+        # 每日增量更新模式
+        success = daily_update()
+    else:
+        # 手动指定日期更新
+        start_date = args.start if args.start else '2025-05-15'
+        success = update_qlib_data(start_date, args.end)
     
     if success and args.merge:
         qlib_dir = Path.home() / '.qlib' / 'qlib_data' / 'cn_data'
         baostock_dir = Path(__file__).parent / 'data' / 'baostock_update'
         merge_with_existing_qlib(baostock_dir, qlib_dir)
+    
+    # 输出使用说明
+    print("\n" + "=" * 60)
+    print("📌 使用说明")
+    print("=" * 60)
+    print("手动更新: python update_data_baostock.py --start 2025-05-15")
+    print("每日更新: python update_data_baostock.py --daily")
+    print("定时任务: crontab -e 添加以下行:")
+    print("  0 18 * * 1-5 cd /Users/air/QT_China && python update_data_baostock.py --daily")
 

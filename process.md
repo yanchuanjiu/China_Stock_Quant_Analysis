@@ -450,3 +450,63 @@ python run_backtest_with_new_data.py
 - HTML 报告: `output/full_backtest_new_data/full_backtest_report.html`
 - 指标对比: `output/full_backtest_new_data/metrics_comparison_full.csv`
 - 交易记录: `output/full_backtest_new_data/*_trades_full.csv`
+
+---
+
+## 2025-11-26 一致时间周期回测 (避免过拟合)
+
+### 1. 时间配置 (严格避免未来数据泄露)
+
+| 阶段 | 时间范围 | 用途 |
+|------|----------|------|
+| 训练期 | 2024-01-01 ~ 2025-08-31 | 模型训练 |
+| 验证期 | 2025-09-01 ~ 2025-09-30 | 调参验证 |
+| **测试期** | **2025-10-01 ~ 2025-11-25** | **统一对比周期** |
+
+### 2. 统一周期回测结果 (34个交易日)
+
+| 指标 | 因子模型 | Buy & Hold | 超额收益 |
+|------|----------|------------|----------|
+| 总收益率 | **-2.55%** | -14.37% | **+11.82%** |
+| 年化收益率 | -17.92% | -69.41% | +51.49% |
+| 年化波动率 | **9.11%** | 25.10% | - |
+| Sharpe Ratio | **-2.45** | -4.70 | +2.25 |
+| 最大回撤 | **-3.74%** | -15.44% | - |
+| 胜率 | **48.48%** | 36.36% | - |
+| 交易天数 | 33 | 33 | - |
+
+**关键发现**: 在市场下跌期间，因子模型有效控制了回撤，超额收益 +11.82%
+
+### 3. 数据更新脚本 (支持每日执行)
+
+```bash
+# 每日增量更新 (推荐)
+python update_data_baostock.py --daily
+
+# 手动指定日期
+python update_data_baostock.py --start 2025-05-15
+
+# 设置定时任务 (每个交易日18:00执行)
+crontab -e
+0 18 * * 1-5 cd /Users/air/QT_China && python update_data_baostock.py --daily
+```
+
+### 4. 交易记录详情
+
+- 总交易次数: **94 条**
+- 持仓股票: **10 只**
+- 调仓频率: 每周一次
+- 完整记录: `output/consistent_backtest/factor_model_trades.csv`
+
+### 5. 新增/更新脚本
+
+| 脚本 | 功能 |
+|------|------|
+| `run_consistent_backtest.py` | 一致时间周期回测 |
+| `update_data_baostock.py` | 支持 `--daily` 每日增量更新 |
+
+### 6. 报告位置
+
+- **HTML 报告**: `output/consistent_backtest/consistent_backtest_report.html`
+- **指标对比**: `output/consistent_backtest/metrics_comparison_consistent.csv`
+- **交易记录**: `output/consistent_backtest/factor_model_trades.csv`
