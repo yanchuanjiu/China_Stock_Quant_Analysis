@@ -1,0 +1,2 @@
+model_type,start_date,end_date,initial_capital,model_final_value,model_total_return,buyhold_final_value,buyhold_total_return,excess_return,total_cost,avg_turnover
+lightgbm,2024-11-15,2025-05-14,100000,143880.77813333037,43.88077813333038,120984.61,20.984613,22.89616471475128,1.7194310284154912,36.468619410450685

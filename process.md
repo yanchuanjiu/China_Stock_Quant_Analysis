@@ -261,3 +261,62 @@ git checkout codex/0.0.6
 # 查看提交历史
 git log --oneline -10
 ```
+
+---
+
+## 2025-11-26 修复回测问题
+
+### 问题修复
+
+1. ❌ **数据更新问题**: crowd source 数据截止到 2025-05-14，暂无更新
+2. ✅ **持仓数据错误**: 之前可视化读取的是 1亿起始资金的实验，已修复为正确的 10万起始资金
+3. ✅ **添加 Buy & Hold 对比**: 使用沪深300指数作为基准进行对比
+
+### 正确的回测结果 (起始资金: ¥100,000)
+
+**回测周期**: 2024-11-15 ~ 2025-05-14 (118 个交易日)
+
+| 指标 | LightGBM 策略 | Buy & Hold |
+|------|---------------|------------|
+| **最终市值** | ¥143,880.78 | ¥120,984.61 |
+| **总收益率** | **+43.88%** | +20.98% |
+| **超额收益** | **+22.90%** | - |
+| 年化超额收益 | +37.17% | - |
+| 信息比率 | 2.2796 | - |
+| 最大回撤 | -4.65% | - |
+| 累计交易成本 | 1.72% | 0.03% |
+| 平均换手率 | 36.47% | 0% |
+
+### 最终持仓明细
+
+| 股票代码 | 持仓数量 | 市值 | 权重 |
+|----------|----------|------|------|
+| SH600893 | 1,628 | ¥19,577 | 13.61% |
+| SZ000938 | 3,637 | ¥14,406 | 10.01% |
+| SH601100 | 2,035 | ¥14,349 | 9.97% |
+| SH600760 | 1,789 | ¥13,837 | 9.62% |
+| SH600660 | 227 | ¥13,711 | 9.53% |
+| **现金** | - | **¥31,538.82** | 21.92% |
+
+### 新增脚本
+
+- `run_complete_backtest.py`: 完整回测脚本，包含 Buy & Hold 对比
+
+### 结果位置
+
+- **对比报告**: `output/backtest_comparison/comparison_report.html`
+- **每日数据**: `output/backtest_comparison/daily_comparison.csv`
+- **汇总数据**: `output/backtest_comparison/summary.csv`
+
+### 数据更新说明
+
+当前数据截止到 **2025-05-14**。要获取更新的数据，请执行：
+
+```bash
+# 方案1: 下载最新 crowd source 数据
+wget https://github.com/chenditc/investment_data/releases/latest/download/qlib_bin.tar.gz
+tar -zxvf qlib_bin.tar.gz -C ~/.qlib/qlib_data/cn_data --strip-components=2
+
+# 方案2: 使用 Docker (数据更新更及时)
+docker run -v ~/.qlib/qlib_data/cn_data:/output -it --rm chenditc/investment_data bash dump_qlib_bin.sh
+```
