@@ -320,3 +320,70 @@ tar -zxvf qlib_bin.tar.gz -C ~/.qlib/qlib_data/cn_data --strip-components=2
 # 方案2: 使用 Docker (数据更新更及时)
 docker run -v ~/.qlib/qlib_data/cn_data:/output -it --rm chenditc/investment_data bash dump_qlib_bin.sh
 ```
+
+---
+
+## 2025-11-26 数据源研究与完整分析
+
+### 1. 数据源可用性研究
+
+| 数据源 | 最新数据日期 | 更新频率 | 可用性 |
+|--------|-------------|----------|--------|
+| **Crowd Source** | 2025-05-14 | 不定期 | ✅ 已使用 |
+| **Baostock** | **2025-11-25** | **每日更新** | ✅ **推荐** |
+| Yahoo Finance | 不支持中国市场 | - | ❌ |
+
+**结论**: Baostock 可以提供 **5月15日至11月25日的 132 天新数据**！
+
+### 2. 完整模型对比 (新增指标)
+
+**回测周期**: 2024-11-15 ~ 2025-05-14 (118 个交易日)
+
+| 指标 | LightGBM | XGBoost | Buy & Hold |
+|------|----------|---------|------------|
+| **总收益率** | **+46.37%** | +24.39% | +20.89% |
+| **年化收益率** | **+125.60%** | +59.39% | +50.47% |
+| 年化波动率 | 25.91% | 29.72% | 21.29% |
+| **Sharpe Ratio** | **3.16** | 1.62 | 1.89 |
+| **Sortino Ratio** | **4.88** | 2.27 | 2.59 |
+| 最大回撤 | -6.82% | -14.32% | -7.16% |
+| **Calmar Ratio** | **18.42** | 4.15 | 7.05 |
+| 胜率 | 58.47% | 56.78% | 60.68% |
+| 盈亏比 | 1.21 | 1.00 | 0.93 |
+
+### 3. 新增文件
+
+- `run_full_analysis.py` - 完整分析脚本，包含:
+  - 多模型对比 (LightGBM, XGBoost)
+  - Buy & Hold 策略对比
+  - **完整评估指标** (Sharpe, Sortino, Calmar 等)
+  - **详细交易记录** (每日买卖明细)
+
+### 4. 交易记录示例
+
+**LightGBM 最近交易** (部分):
+
+| 日期 | 股票 | 操作 | 数量 | 价格 | 金额 |
+|------|------|------|------|------|------|
+| 2025-05-13 | SZ002459 | SELL | 13,153 | ¥1.14 | ¥15,058 |
+| 2025-05-13 | SZ002463 | BUY | 5,060 | ¥2.79 | ¥14,102 |
+| 2025-05-13 | SH601100 | BUY | 2,035 | ¥7.06 | ¥14,359 |
+| 2025-05-14 | SZ000938 | BUY | 3,637 | ¥3.96 | ¥14,406 |
+
+完整交易记录保存在: `output/full_analysis/lightgbm_trades.csv`
+
+### 5. 结果位置
+
+- **完整报告**: `output/full_analysis/full_analysis_report.html`
+- **指标对比**: `output/full_analysis/metrics_comparison.csv`
+- **交易记录**: `output/full_analysis/*_trades.csv`
+
+### 6. 如何更新数据 (使用 Baostock)
+
+```python
+# 在 run_full_analysis.py 中调用
+from run_full_analysis import update_data_from_baostock
+update_data_from_baostock(start_date='2025-05-15')
+```
+
+或安装 baostock: `pip install baostock`
