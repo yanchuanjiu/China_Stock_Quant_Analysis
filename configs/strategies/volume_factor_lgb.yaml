@@ -1,0 +1,95 @@
+# 量比因子 + LightGBM 策略配置
+# 目标: 年化收益 > 50%, Sharpe > 2
+
+strategy:
+  name: "VolumeFactor_LightGBM"
+  version: "1.0.0"
+  description: "基于Alpha158量比因子的LightGBM选股策略"
+
+# 数据配置
+data:
+  instruments: "csi300"
+  benchmark: "SH000300"
+  freq: "day"
+  
+  # 时间划分 (数据截止到2025-05-14)
+  train_start: "2023-11-15"
+  train_end: "2025-02-28"
+  valid_start: "2025-03-01"
+  valid_end: "2025-04-15"
+  test_start: "2025-04-16"
+  test_end: "2025-05-14"
+
+# 因子配置
+factors:
+  handler: "Alpha158"
+  # 量比因子列表 (Alpha158内置)
+  volume_factors:
+    - VMA    # 成交量移动平均
+    - VSTD   # 成交量标准差
+    - WVMA   # 成交量加权价格波动
+    - CORR   # 价格与成交量相关性
+    - CORD   # 价格变化与成交量变化相关性
+    - VSUMP  # 成交量上涨比例
+    - VSUMN  # 成交量下跌比例
+    - VSUMD  # 成交量涨跌差异
+  
+  # 滚动窗口
+  windows: [5, 10, 20, 30, 60]
+
+# 模型配置
+model:
+  class: "LGBModel"
+  module_path: "qlib.contrib.model.gbdt"
+  params:
+    loss: "mse"
+    learning_rate: 0.03
+    max_depth: 10
+    num_leaves: 256
+    early_stopping_rounds: 80
+    verbose: -1
+    feature_fraction: 0.8
+    bagging_fraction: 0.8
+    bagging_freq: 5
+    lambda_l1: 0.1
+    lambda_l2: 0.1
+
+# 回测配置
+backtest:
+  account: 100000  # 起始资金 10万
+  
+  # 持仓策略
+  strategy:
+    class: "TopkDropoutStrategy"
+    topk: 10      # 持有前10只
+    n_drop: 2     # 每次最多调仓2只
+  
+  # 交易参数
+  exchange:
+    freq: "day"
+    limit_threshold: 0.095  # 涨跌停限制
+    deal_price: "open"      # 第二天开盘价
+    open_cost: 0.0003       # 买入万3
+    close_cost: 0.0003      # 卖出万3
+    min_cost: 5             # 最小手续费
+    impact_cost: 0.001      # 滑点0.1%
+    trade_unit: 100         # 100股/手
+
+# 风控配置
+risk:
+  max_drawdown: 0.15       # 最大回撤15%
+  position_limit: 0.2      # 单股上限20%
+  stop_loss: 0.08          # 个股止损8%
+  
+# 信号输出配置
+signal:
+  output_dir: "output/signals"
+  format: "json"
+  fields:
+    - stock
+    - action
+    - weight
+    - score
+    - price_ref
+    - target_amount
+

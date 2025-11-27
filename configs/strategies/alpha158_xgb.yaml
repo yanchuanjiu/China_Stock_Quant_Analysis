@@ -1,0 +1,61 @@
+# Alpha158 + XGBoost 策略配置
+
+strategy:
+  name: "Alpha158_XGBoost"
+  version: "1.0.0"
+  description: "基于Alpha158因子的XGBoost选股策略"
+
+data:
+  instruments: "csi300"
+  benchmark: "SH000300"
+  freq: "day"
+  # 时间划分 (数据截止到2025-05-14)
+  train_start: "2023-11-15"
+  train_end: "2025-02-28"
+  valid_start: "2025-03-01"
+  valid_end: "2025-04-15"
+  test_start: "2025-04-16"
+  test_end: "2025-05-14"
+
+factors:
+  handler: "Alpha158"
+
+model:
+  class: "XGBModel"
+  module_path: "qlib.contrib.model.xgboost"
+  params:
+    n_estimators: 150
+    max_depth: 8
+    learning_rate: 0.08
+    early_stopping_rounds: 30
+    verbosity: 0
+    colsample_bytree: 0.8
+    subsample: 0.8
+    reg_alpha: 0.1
+    reg_lambda: 0.1
+
+backtest:
+  account: 100000
+  strategy:
+    class: "TopkDropoutStrategy"
+    topk: 10
+    n_drop: 2
+  exchange:
+    freq: "day"
+    limit_threshold: 0.095
+    deal_price: "open"
+    open_cost: 0.0003
+    close_cost: 0.0003
+    min_cost: 5
+    impact_cost: 0.001
+    trade_unit: 100
+
+risk:
+  max_drawdown: 0.15
+  position_limit: 0.2
+  stop_loss: 0.08
+
+signal:
+  output_dir: "output/signals"
+  format: "json"
+

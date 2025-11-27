@@ -1,143 +1,166 @@
-# China Stock Quant Analysis (Qlib-based)
+# 🚀 中国 A 股量化交易系统
 
-本项目以 [Microsoft Qlib](https://github.com/microsoft/qlib) 为蓝本，面向低频中国 A 股量化研究场景。核心目标是基于同花顺数据源（通过 akshare 提供）完成数据接入、因子挖掘、模型训练与回测分析，寻找中期回报率更高的因子与模型组合，为低频交易提供决策支持。
+基于 [Microsoft Qlib](https://github.com/microsoft/qlib) 的量化投资平台，专注于沪深 300 股票的因子选股策略。
 
-## 项目结构
+## 🎯 目标
+
+| 指标 | 目标 | 当前最佳 |
+|------|------|----------|
+| 年化收益率 | **>50%** | -33.8% |
+| 夏普比率 | **>2** | -1.40 |
+| 最大回撤 | <15% | -5.79% |
+
+> ⚠️ 当前测试期市场下跌，正在优化策略中
+
+## 📁 项目结构
 
 ```
-.
-├── README.md
-├── requirements.txt            # 运行依赖（Qlib + akshare）
-└── src
-    └── qlib_cn_lowfreq
-        ├── __init__.py
-        ├── config.py           # Qlib 初始化与默认路径配置
-        ├── data_pipeline.py    # 同花顺数据获取与 Qlib 数据转换
-        └── workflow.py         # 低频因子挖掘、模型训练和回测示例
+QT_China/
+├── configs/                    # 策略配置
+│   └── strategies/             # YAML 策略文件
+│       ├── volume_factor_lgb.yaml
+│       └── alpha158_xgb.yaml
+│
+├── src/                        # 核心代码
+│   ├── signals/                # 信号生成模块
+│   │   └── generator.py        # 交易信号生成器
+│   ├── data/                   # 数据模块
+│   ├── factors/                # 因子模块
+│   ├── models/                 # 模型模块
+│   ├── backtest/               # 回测模块
+│   └── trading/                # 交易模块
+│
+├── scripts/                    # 入口脚本
+│   └── run_backtest.py         # 统一回测入口
+│
+├── output/                     # 输出目录
+│   ├── signals/                # 交易信号 (JSON)
+│   ├── reports/                # 分析报告 (HTML/CSV)
+│   └── logs/                   # 运行日志
+│
+├── tests/                      # 测试
+├── docs/                       # 文档
+├── REFACTOR_PLAN.md           # 重构计划
+└── process.md                  # 开发日志
 ```
 
-## 安装说明
+## 🚀 快速开始
 
-> 建议使用 Python 3.9+，并在全局或虚拟环境下执行以下步骤。
-
-1. **在线安装**（默认方式）：
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. **离线/代理安装**（网络受限或需要内网环境部署时）：
-
-   ```bash
-   # 在可联网环境提前下载 requirements.txt 中列出的 wheel 包
-   # 将 wheel 拷贝到 <wheel_dir> 后，在目标环境执行
-   pip install --no-index --find-links <wheel_dir> -r requirements.txt
-   # 或者在具备 HTTP 代理的环境追加 --proxy 参数
-   # pip install --proxy http://<host>:<port> -r requirements.txt
-   ```
-
-3. **安装自检**：即便第三方依赖尚未安装完毕，也可提前验证 CLI 可用性：
-
-   ```bash
-   PYTHONPATH=src python -m qlib_cn_lowfreq.data_pipeline --help
-   PYTHONPATH=src python -m qlib_cn_lowfreq.workflow --help
-   ```
-
-   如未安装依赖，命令会提示需要的第三方库；成功安装后，以上命令会输出参数说明。
-
-## 快速开始
-
-1. 初始化数据（日频存储，支持镜像到 Qlib 官方 Yahoo! 财经数据目录）：
-
-   ```bash
-   # 下载单个股票数据（例如：比亚迪 002594.SZ）
-   PYTHONPATH=src python -m qlib_cn_lowfreq.data_pipeline --start 2016-01-01 --end 2024-12-31 --symbols 002594.SZ
-
-   # 下载多个股票数据
-   PYTHONPATH=src python -m qlib_cn_lowfreq.data_pipeline --start 2015-01-01 --end 2024-12-31 --symbols 000001.SZ 600000.SH --mirror-yahoo
-   ```
-
-    该命令将从 akshare 拉取日线数据（前复权），并转换为 Qlib 所需的**日频**二进制格式存放到 `./data/akshare_ths/qlib_data`；使用 `--mirror-yahoo` 选项会将生成数据复制到 `~/.qlib/qlib_data/cn_data`，方便与官方 Yahoo! 财经数据合并使用。
-
-### 实际数据可用性验证（BYD）
-
-若需验证 akshare 模块和 Qlib 自带的 Yahoo! Finance 数据加载能力，可以运行带网络访问的集成测试。测试会使用比亚迪（002594.SZ）的真实行情数据，而非模拟数据：
+### 1. 安装依赖
 
 ```bash
-# 需要具备网络访问权限，启用 LIVE_DATA_TESTS=1 触发真实数据验证
-PYTHONPATH=src LIVE_DATA_TESTS=1 pytest -k "live_sources" -vv
+pip install -r requirements.txt
 ```
 
-第一条用例会通过 akshare 拉取比亚迪 A 股行情，验证数据格式和字段；第二条用例会借助 Qlib 自带的远程数据下载工具获取 Yahoo! Finance 的日线示例数据，并通过 `qlib.data.D` 读取比亚迪行情，确保 Qlib 的数据加载链路可用。
-
-2. 运行示例训练与回测（默认会在最近 3 个月窗口对比 Buy & Hold 基准）：
-
-   ```bash
-   PYTHONPATH=src python -m qlib_cn_lowfreq.workflow --market csi300 --start 2017-01-01 --end 2023-12-31
-   ```
-
-   示例基于 Qlib 的 Alpha158 因子处理器与 LightGBM 模型，展示低频（周频）回测流程；脚本会自动截取最近 3 个月作为回测窗，并在回测结果中记录策略收益是否跑赢基准（默认 `SH000300`）。
-
-3. 验证数据有效性：
-
-   数据生成后，可以通过 Qlib 的标准接口验证数据：
-
-   ```python
-   import qlib
-   qlib.init(provider_uri='./data/akshare_ths/qlib_data', region='cn')
-   from qlib.data import D
-   
-   # 获取日历
-   cal = D.calendar(start_time='2016-01-01', end_time='2024-12-31')
-   print(f"交易日历数量: {len(cal)}")
-   
-   # 获取股票数据
-   data = D.features(['002594.SZ'], ['$close', '$volume'], start_time='2016-01-01', end_time='2024-12-31')
-   print(data.head())
-   ```
-
-## 测试说明
-
-项目附带完整的回归测试以验证核心逻辑（路径初始化、依赖守护、工作流解析、数据获取与转换等）。安装依赖后，可运行：
+### 2. 准备数据
 
 ```bash
-# 运行所有测试
-PYTHONPATH=src python -m unittest discover -v
+# 下载 Qlib 数据
+python -m qlib.tests.data --target_dir ~/.qlib/qlib_data/cn_data --region cn
 
-# 运行测试并生成覆盖率报告
-PYTHONPATH=src coverage run --source=src/qlib_cn_lowfreq -m unittest discover
-coverage report
-coverage html  # 生成 HTML 报告
+# 或使用 Baostock 更新最新数据
+python update_data_baostock.py --daily
 ```
 
-当前测试覆盖率达到 **100%**，包括：
-- 配置模块（`config.py`）
-- 数据管线（`data_pipeline.py`）：包括 akshare API 兼容性、数据转换、Qlib 格式写入等
-- 工作流（`workflow.py`）：包括参数解析、实验运行等
+### 3. 运行回测
 
-如需在不同环境验证，可添加 `-k` 过滤器仅运行特定用例，例如 `-k data_pipeline`。
+```bash
+# 单策略回测
+python scripts/run_backtest.py --config configs/strategies/volume_factor_lgb.yaml
 
-> **提示：** `python -m qlib_cn_lowfreq.data_pipeline --help` 与 `python -m qlib_cn_lowfreq.workflow --help` 在缺少第三方依赖时也可正常输出
-> 用法说明，便于在受限环境中先行查看参数；真正执行数据拉取与训练时依然需要按上述方式安装依赖。
+# 多策略对比
+python scripts/run_backtest.py --compare
+```
 
-## 设计要点
+### 4. 生成交易信号
 
-- **同花顺数据源覆盖**：`data_pipeline.py` 中通过 akshare 的历史行情接口获取数据：
-  - 优先使用 `stock_zh_a_hist_ths`（同花顺接口）
-  - 自动降级到 `stock_zh_a_hist`（通用接口）作为兼容性备选
-  - 使用 `stock_zh_a_spot_em` 获取股票列表
-  - 统一转换到 Qlib 期望的字段格式（open, high, low, close, volume, amount）
-- **Qlib 数据格式兼容**：
-  - 优先使用 Qlib 的 `dump_bin` API（如果可用）
-  - 自动降级到本地 vendored `qlib/scripts/dump_bin.py` 的 CLI 调用
-  - 支持与官方 Yahoo! 财经数据合并使用
-- **低频友好**：默认将日线数据聚合为周频，便于中期（数周至数月）因子与策略研究。
-- **因子与模型扩展**：`workflow.py` 使用 Qlib 原生的 `Alpha158` 作为示例，可在 `FACTOR_CONFIG` 中自由增减因子，也可替换模型为其他 Qlib 内置或自定义模型。
-- **测试覆盖**：项目包含完整的单元测试，代码覆盖率达到 100%，确保核心功能稳定可靠。
+```bash
+python src/signals/generator.py
+```
 
-## 后续方向
+信号输出示例 (`output/signals/2025-11-27_VolumeFactor_LightGBM.json`):
 
-- 丰富同花顺特有的特色因子（如资金流、龙虎榜等），并补充相应的聚合逻辑。
-- 构建面向多市场/多周期的组合优化与风险控制模块。
-- 引入更贴合低频场景的交易成本建模与持仓约束。
+```json
+{
+  "date": "2025-11-27",
+  "strategy": "VolumeFactor_LightGBM",
+  "signals": [
+    {
+      "stock": "SZ002459",
+      "action": "BUY",
+      "weight": 0.12,
+      "score": 0.85,
+      "target_amount": 9500
+    }
+  ]
+}
+```
 
+## 📊 策略列表
+
+| 策略 | 因子 | 模型 | 配置文件 |
+|------|------|------|----------|
+| 量比因子 | Alpha158 (量比增强) | LightGBM | `volume_factor_lgb.yaml` |
+| 标准因子 | Alpha158 | XGBoost | `alpha158_xgb.yaml` |
+
+## 🔬 Alpha158 量比因子
+
+| 因子 | 说明 |
+|------|------|
+| **VMA** | 成交量移动平均 |
+| **VSTD** | 成交量标准差 |
+| **WVMA** | 成交量加权价格波动 |
+| **CORR** | 价格与成交量相关性 |
+| **CORD** | 价格变化与成交量变化相关性 |
+| **VSUMP/VSUMN** | 成交量上涨/下跌比例 |
+| **VSUMD** | 成交量涨跌差异 |
+
+## ⚙️ 交易配置
+
+```yaml
+backtest:
+  account: 100000        # 起始资金 10万
+  strategy:
+    topk: 10             # 持有前10只
+    n_drop: 2            # 每次最多调仓2只
+  exchange:
+    deal_price: "open"   # 第二天开盘价
+    open_cost: 0.0003    # 买入万3
+    close_cost: 0.0003   # 卖出万3
+    impact_cost: 0.001   # 滑点0.1%
+    trade_unit: 100      # 100股/手
+```
+
+## 📈 回测结果 (2025-04-16 ~ 2025-05-14)
+
+| 模型 | 总收益率 | Sharpe | 最大回撤 |
+|------|----------|--------|----------|
+| **VolumeFactor_LightGBM** | **-2.90%** | -1.40 | -5.79% |
+| VolumeFactor_XGBoost | -3.80% | -1.72 | -7.52% |
+| Alpha158_LightGBM | -6.88% | -3.47 | -7.79% |
+| Alpha158_XGBoost | -6.18% | -3.97 | -8.03% |
+| Buy & Hold | -5.98% | -4.55 | -5.27% |
+
+## 📝 开发路线图
+
+- [x] 项目重构
+- [x] 策略配置 YAML 化
+- [x] 信号生成模块
+- [ ] 因子优化 (进行中)
+- [ ] 模型集成
+- [ ] 交易平台对接
+- [ ] 实盘模拟
+
+## 📚 参考
+
+- [Microsoft Qlib](https://github.com/microsoft/qlib)
+- [Alpha158 因子](https://qlib.readthedocs.io/en/latest/component/data.html#alpha158)
+- [Baostock](http://baostock.com/)
+
+## 📄 License
+
+MIT License
+
+---
+
+*最后更新: 2025-11-27*
